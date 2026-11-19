@@ -1,0 +1,82 @@
+<!-- <form (ngSubmit)> + ปุ่ม type="submit" = กด Enter ในช่องใดก็ได้ส่งฟอร์มเหมือนกด Login
+     novalidate: ปิด tooltip validation ของ browser ใช้ข้อความภาษาไทยของเราเองแทน -->
+<form *ngIf="!googleLinkedNotice" class="login-form" [formGroup]="form" (ngSubmit)="onLogin()" (input)="clearServerError()"
+  novalidate>
+  <h1 id="login-title">Welcome to<br />AuoYoo!</h1>
+  <p class="notice" role="status" *ngIf="notice">{{ notice }}</p>
+
+  <label for="login-username">Username</label>
+  <input #usernameInput id="login-username" type="text" formControlName="username" autocomplete="username"
+    autocapitalize="off" spellcheck="false"
+    [class.input-error]="showError('username')"
+    [attr.aria-invalid]="showError('username')" aria-describedby="login-username-error" />
+  <p id="login-username-error" class="field-error" [class.visible]="showError('username')">
+    {{ showError('username') ? fieldError('username') : ' ' }}
+  </p>
+
+  <label for="login-password">Password</label>
+  <div class="password-field">
+    <input #passwordInput id="login-password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+      autocomplete="current-password" [attr.data-autofocus]="prefilled ? '' : null"
+      [class.input-error]="showError('password')"
+      [attr.aria-invalid]="showError('password')" aria-describedby="login-password-error" />
+    <button type="button" class="toggle-password" (click)="togglePassword()" (mousedown)="$event.preventDefault()"
+      [attr.aria-label]="showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'" [attr.aria-pressed]="showPassword"
+      aria-controls="login-password">
+      <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+    </button>
+  </div>
+  <p id="login-password-error" class="field-error" [class.visible]="showError('password')">
+    {{ showError('password') ? fieldError('password') : ' ' }}
+  </p>
+
+  <div class="row">
+    <label class="remember" for="login-remember">
+      <input id="login-remember" type="checkbox" formControlName="rememberMe" /> Remember me
+    </label>
+    <button type="button" class="forget" (mousedown)="$event.preventDefault()" (click)="onForgotPassword()">Forgot Password?</button>
+  </div>
+
+  <p class="error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <button type="submit" class="login-submit" [disabled]="loading" [attr.aria-busy]="loading">
+    <span class="spinner" *ngIf="loading" aria-hidden="true"></span>
+    {{ loading ? 'กำลังเข้าสู่ระบบ...' : 'Login' }}
+  </button>
+
+  <button type="button" class="signup-link" (mousedown)="$event.preventDefault()" (click)="onSignUp()">Sign up</button>
+
+  <!-- เข้าสู่ระบบด้วย Google (แสดงเมื่อ backend ตั้ง GOOGLE_CLIENT_ID แล้ว) — ปุ่มตามแนวทางแบรนด์ Google (พื้นขาว ขอบเทา โลโก้ G สี่สี) -->
+  <ng-container *ngIf="googleEnabled">
+    <div class="or-divider" role="separator" aria-label="หรือ"><span aria-hidden="true">หรือ</span></div>
+    <button type="button" class="google-btn" (click)="onGoogle()" [disabled]="googleLoading || loading"
+      [attr.aria-busy]="googleLoading">
+      <span class="google-spinner" *ngIf="googleLoading" aria-hidden="true"></span>
+      <svg *ngIf="!googleLoading" class="google-g" viewBox="0 0 48 48" width="20" height="20" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+      </svg>
+      <span>{{ googleLoading ? 'กำลังเข้าสู่ระบบด้วย Google...' : 'เข้าสู่ระบบด้วย Google' }}</span>
+    </button>
+    <p class="error google-error" role="alert" *ngIf="googleError">{{ googleError }}</p>
+  </ng-container>
+
+  <p class="privacy-note">
+    การเข้าสู่ระบบถือว่าคุณรับทราบ
+    <a routerLink="/privacy" (click)="openPrivacy()">นโยบายความเป็นส่วนตัว</a>
+  </p>
+</form>
+
+<!-- เข้าสู่ระบบด้วย Google แล้วเพิ่งผูกเข้าบัญชีเดิม: ล็อกอินแล้ว แต่รหัสผ่านเดิมถูกล้าง -> แจ้งก่อนปิด modal
+     (modal host ชี้ aria-labelledby ไปทั้ง login-title และ login-linked-title — แสดงอยู่ทีละอัน) -->
+<div *ngIf="googleLinkedNotice" class="login-form linked-notice" role="status">
+  <h1 id="login-linked-title">ผูกบัญชีกับ Google แล้ว</h1>
+  <p class="linked-text">
+    ต่อจากนี้เข้าสู่ระบบด้วย Google ได้ทันที เพื่อความปลอดภัย รหัสผ่านเดิมของบัญชีนี้ถูกยกเลิกแล้ว
+    หากต้องการเข้าสู่ระบบด้วยรหัสผ่าน กรุณาตั้งรหัสผ่านใหม่ที่หน้าโปรไฟล์
+  </p>
+  <button #linkedOk type="button" class="login-submit" (click)="closeLinkedNotice()">ตกลง</button>
+  <button type="button" class="signup-link" (click)="goSetPassword()">ไปตั้งรหัสผ่านที่หน้าโปรไฟล์</button>
+</div>

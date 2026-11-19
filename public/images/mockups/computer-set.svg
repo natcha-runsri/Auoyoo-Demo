@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: คอมพิวเตอร์เซ็ต">
+  <!-- AuoYoo product mockup (computer-set) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="104" y="118" width="128" height="86" rx="8"/>
+      <path d="M168 204 V228 M140 230 H196"/>
+      <rect x="252" y="112" width="46" height="122" rx="8"/>
+      <path d="M264 134 H286 M264 150 H286"/>
+      <circle cx="275" cy="210" r="5"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">คอมพิวเตอร์เซ็ต</text>
+</svg>

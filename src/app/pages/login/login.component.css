@@ -1,0 +1,332 @@
+/* Theme มาจาก CSS variables กลางใน src/styles.css (--bg-modal, --title, --label, --line, --btn, ...)
+   การ์ด/ขอบ/พื้นหลังของ modal เองอยู่ที่ auth-modal-host.component.css — ไฟล์นี้จัดแค่เนื้อหาข้างใน */
+
+.login-form {
+  font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+}
+
+.login-form h1 {
+  margin: 0 0 28px;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--title);
+  text-align: center;
+}
+
+.login-form label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--label);
+  margin: 24px 0 8px;
+}
+
+.login-form label:first-of-type {
+  margin-top: 0;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 4px 2px 8px;
+  margin: 0;
+  font-size: 15px;
+  font-family: inherit;
+  color: #1c1c1c;
+  outline: none;
+  transition: border-color 0.15s ease, border-width 0.15s ease;
+}
+
+/* Focus: เส้นใต้หนา+เข้มขึ้น ไม่มี outline สี่เหลี่ยมของ browser (outline: none ด้านบนแล้ว) */
+.login-form input:focus {
+  border-bottom: 2px solid var(--label);
+  padding-bottom: 7px; /* กันช่อง "กระโดด" ตอนเส้นหนาขึ้น 1px -> 2px */
+}
+
+/* ช่อง Password + ปุ่มรูปตาแสดง/ซ่อนรหัส (ปุ่มลอยทับด้านขวาของช่อง) */
+.password-field {
+  position: relative;
+}
+
+.login-form .password-field input {
+  padding-right: 36px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--label);
+  cursor: pointer;
+}
+
+@media (hover: hover) { .toggle-password:hover { background: rgba(154, 63, 30, 0.08); } }
+
+.toggle-password:focus-visible {
+  outline: 2px solid var(--label);
+  outline-offset: 1px;
+}
+
+.toggle-password .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.login-form input.input-error {
+  border-bottom-color: var(--error-line);
+}
+
+.login-form .field-error {
+  color: var(--error);
+  font-size: 12px;
+  min-height: 18px;
+  margin: 6px 0 0;
+  line-height: 1.4;
+  visibility: hidden;
+}
+.login-form .field-error.visible { visibility: visible; }
+
+.login-form .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 26px 0 8px;
+}
+
+.login-form .remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.login-form .remember input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: #1a1a1a;
+}
+
+.login-form .remember input[type="checkbox"]:focus-visible,
+.login-form .forget:focus-visible,
+.signup-link:focus-visible {
+  outline: 2px solid var(--title);
+  outline-offset: 2px;
+}
+
+.login-form .forget {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--forgot);
+  text-decoration: none;
+}
+
+/* ข้อความแจ้งสำเร็จ (เช่น หลังตั้งรหัสผ่านใหม่) */
+.login-form .notice {
+  color: #1f6b3a;
+  background: rgba(46, 125, 79, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin: -12px 0 18px;
+}
+
+.login-form .error {
+  color: var(--error);
+  background: rgba(166, 27, 27, 0.07);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.login-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  margin-top: 24px;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn);
+  color: var(--btn-text);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+@media (hover: hover) { .login-submit:hover:not(:disabled) { filter: brightness(0.9); } }
+
+.login-submit:focus-visible {
+  outline: 2px solid var(--title);
+  outline-offset: 3px;
+}
+
+/* ระหว่างรอ API: กดซ้ำไม่ได้ + spinner */
+.login-submit:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: loginSpin 0.7s linear infinite;
+}
+
+@keyframes loginSpin {
+  to { transform: rotate(360deg); }
+}
+
+.signup-link {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px;
+  font-family: inherit; /* <button> ไม่สืบทอดฟอนต์เอง */
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.privacy-note {
+  margin: 18px 0 0;
+  font-size: 12.5px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.privacy-note a { color: var(--title); font-weight: 600; }
+.privacy-note a:focus-visible { outline: 2px solid var(--title); outline-offset: 2px; }
+
+/* แจ้งหลังผูก Google เข้าบัญชีเดิม */
+.linked-text {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #1c1c1c;
+  text-align: center;
+}
+
+/* ===== เข้าสู่ระบบด้วย Google — ตามแนวทางแบรนด์ Google (light: พื้นขาว ขอบ #747775 ตัวอักษร #1F1F1F โลโก้ G สี่สี) ===== */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--line);
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid #747775;
+  border-radius: 999px;
+  background: #fff;
+  color: #1f1f1f;
+  font-family: 'Roboto', 'Noto Sans Thai', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.google-g { flex: 0 0 20px; }
+
+@media (hover: hover) {
+  .google-btn:hover:not(:disabled) { background: #f8f9fa; box-shadow: 0 1px 3px rgba(60, 64, 67, 0.2); }
+}
+
+.google-btn:focus-visible {
+  outline: 2px solid var(--title);
+  outline-offset: 3px;
+}
+
+.google-btn:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+.google-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #dadce0;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  animation: loginSpin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .google-spinner { animation-duration: 1.6s; }
+}
+
+@media (max-width: 479px) {
+  .login-form h1 {
+    font-size: 32px;
+  }
+}
+
+/* มือถือ/แท็บเล็ต: ช่องพิมพ์ 16px ขึ้นไป — iPhone ไม่ซูมหน้าเว็บตอนแตะช่องพิมพ์ */
+@media (max-width: 1023px) {
+  .login-form input[type="text"],
+  .login-form input[type="password"] { font-size: 16px; }
+}
+
+/* จอสัมผัส: ช่องกรอก/ตัวเลือก/ลิงก์ สูง 44px; ปุ่มดูรหัสผ่านมีพื้นที่กดรอบ ๆ 44px */
+@media (max-width: 1023px) {
+  .login-form input[type="text"],
+  .login-form input[type="email"],
+  .login-form input[type="password"] { min-height: 44px; }
+  .toggle-password { bottom: 6px; }
+  .toggle-password::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+  .login-form .remember { min-height: 44px; }
+  .login-form .row { margin-top: 18px; }
+  .login-form .forget { min-height: 44px; }
+  .signup-link { min-height: 44px; margin-top: 4px; }
+}

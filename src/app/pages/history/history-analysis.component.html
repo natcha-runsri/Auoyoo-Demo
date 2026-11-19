@@ -1,0 +1,45 @@
+<section class="analysis" aria-labelledby="hist-analysis-title" [attr.aria-busy]="loading">
+  <h2 id="hist-analysis-title" class="title">วิเคราะห์การใช้งาน</h2>
+  <div class="range-toggle" role="group" aria-label="ช่วงเวลาที่ใช้วิเคราะห์">
+    <button *ngFor="let r of ranges" type="button" [class.active]="r === range" [attr.aria-pressed]="r === range"
+      (click)="setRange(r)">{{ r }} วัน</button>
+  </div>
+  <p class="range-label">{{ rangeLabel }}</p>
+  <p *ngIf="error" class="error" role="alert">
+    {{ error }} <button type="button" class="link-btn" (click)="retry.emit()">ลองใหม่</button>
+  </p>
+
+  <article class="card" aria-labelledby="hist-cat-title">
+    <app-donut-chart [slices]="categoryEnough ? summary!.categories : []" [colors]="categoryColors"
+      [ariaLabel]="categoryAria"></app-donut-chart>
+    <h3 id="hist-cat-title" class="card-title">หมวดหมู่ที่สนใจ</h3>
+    <ng-container *ngIf="categoryEnough; else noCategory">
+      <ul class="legend">
+        <li *ngFor="let s of summary!.categories; let i = index">
+          <span class="swatch" [style.background]="categoryColors[i]" aria-hidden="true"></span>
+          <span class="legend-label">{{ s.label }}</span>
+          <span class="legend-value">{{ s.percent }}%</span>
+        </li>
+      </ul>
+      <p class="insight">{{ categoryText }}</p>
+    </ng-container>
+    <ng-template #noCategory><p class="insight muted">{{ notEnoughData }}</p></ng-template>
+  </article>
+
+  <article class="card" aria-labelledby="hist-price-title">
+    <app-donut-chart [slices]="priceEnough ? summary!.priceRanges : []" [colors]="priceColors"
+      [ariaLabel]="priceAria"></app-donut-chart>
+    <h3 id="hist-price-title" class="card-title">ช่วงราคาที่สนใจ</h3>
+    <ng-container *ngIf="priceEnough; else noPrice">
+      <ul class="legend">
+        <li *ngFor="let s of summary!.priceRanges; let i = index">
+          <span class="swatch" [style.background]="priceColors[i]" aria-hidden="true"></span>
+          <span class="legend-label">{{ s.label }}</span>
+          <span class="legend-value">{{ s.percent }}%</span>
+        </li>
+      </ul>
+      <p class="insight">{{ priceText }}</p>
+    </ng-container>
+    <ng-template #noPrice><p class="insight muted">{{ notEnoughData }}</p></ng-template>
+  </article>
+</section>

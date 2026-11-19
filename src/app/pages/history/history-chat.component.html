@@ -1,0 +1,80 @@
+<!-- ไล่สีของไอคอนประกายดาว (รูปประจำตัว AI) -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ai-spark-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3fc" />
+      <stop offset="1" stop-color="#a78bfa" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="hc-hero">
+  <div class="hc-hero-inner">
+    <div>
+      <nav class="crumbs" aria-label="breadcrumb">
+        <a routerLink="/">หน้าหลัก</a><span aria-hidden="true">/</span>
+        <a routerLink="/history">ประวัติการใช้งาน</a><span aria-hidden="true">/</span>
+        <span aria-current="page">แชท AI</span>
+      </nav>
+      <h1 class="hc-title">แชท AI ที่บันทึกไว้</h1>
+    </div>
+    <span class="material-symbols-outlined hc-hero-icon" aria-hidden="true">forum</span>
+  </div>
+</header>
+
+<main class="hc-page">
+  <p *ngIf="loading" class="hc-state" role="status">กำลังโหลด...</p>
+
+  <div *ngIf="error === 'missing'" class="hc-state" role="alert">
+    <p>ไม่พบแชทนี้ อาจถูกลบไปแล้ว</p>
+    <a routerLink="/history" class="hc-btn">กลับไปหน้าประวัติ</a>
+  </div>
+  <div *ngIf="error === 'failed'" class="hc-state" role="alert">
+    <p>โหลดแชทไม่สำเร็จ</p>
+    <button type="button" class="hc-btn" (click)="load()">ลองใหม่</button>
+  </div>
+
+  <ng-container *ngIf="chat">
+    <div class="hc-bar">
+      <p class="hc-meta">เริ่มแชทเมื่อ {{ startedLabel }}</p>
+      <p class="hc-note">
+        <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+        เปิดอ่านได้อย่างเดียว · สินค้าและราคาเป็นข้อมูล ณ ตอนที่ AI ตอบ
+      </p>
+    </div>
+
+    <div class="panel started">
+      <div class="log">
+        <div class="messages" aria-label="บทสนทนากับ AI แนะนำสินค้า">
+          <p *ngIf="!chat.messages.length" class="hc-empty">แชทนี้ไม่มีข้อความ</p>
+          <div *ngFor="let m of chat.messages; trackBy: trackByIndex" class="msg" [class.user]="m.role === 'user'">
+            <ng-container *ngIf="m.role === 'user'; else botAvatar">
+              <img class="avatar" [src]="avatarFailed ? 'images/default-avatar.svg' : userAvatar" alt="" width="38" height="38"
+                (error)="avatarFailed = true" />
+            </ng-container>
+            <div class="content">
+              <p *ngIf="m.text" class="bubble"><span class="visually-hidden">{{ m.role === 'user' ? 'คุณ: ' : 'AI: ' }}</span>{{ m.text }}</p>
+              <div class="products" *ngIf="m.products.length" role="group" aria-label="สินค้าที่แนะนำ">
+                <app-product-card *ngFor="let p of m.products" [product]="p"></app-product-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hc-actions">
+      <a routerLink="/history" class="hc-btn hc-btn-ghost">กลับไปหน้าประวัติ</a>
+      <a routerLink="/recommendations" class="hc-btn">
+        <span class="material-symbols-outlined" aria-hidden="true">add_comment</span>เริ่มแชทใหม่
+      </a>
+    </div>
+  </ng-container>
+</main>
+
+<ng-template #botAvatar>
+  <span class="avatar bot" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path fill="url(#ai-spark-gradient)"
+      d="M12 2.5c.5 4.6 2.4 6.5 7 7-4.6.5-6.5 2.4-7 7-.5-4.6-2.4-6.5-7-7 4.6-.5 6.5-2.4 7-7z" /></svg>
+  </span>
+</ng-template>

@@ -1,0 +1,61 @@
+:host { display: block; }
+
+.cards {
+  display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 18px;
+  position: relative; margin: 0; padding: 14px 2px 4px; list-style: none;
+}
+.card {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0;
+  padding: 18px 16px 16px; border: 1.5px solid #d7dbe7; border-radius: 16px; background: #fff; text-align: center;
+}
+.card.recommended { border: 2.5px solid #1c316f; box-shadow: 0 6px 18px rgba(28, 49, 111, 0.14); }
+
+.ai-badge {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 12px; border-radius: 999px; background: #e9b949; color: #1c316f; font-size: 12.5px; font-weight: 800;
+  white-space: nowrap; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.ai-badge .material-symbols-outlined { font-size: 16px; font-variation-settings: 'FILL' 1; }
+
+.remove {
+  position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%; background: #f3f4f6; color: #374151; cursor: pointer;
+}
+@media (hover: hover) { .remove:hover { background: #fdecec; color: #8b1d1d; } }
+.remove .material-symbols-outlined { font-size: 18px; }
+
+.thumb { display: grid; place-items: center; width: 100%; height: 150px; }
+.thumb img { max-width: 100%; max-height: 150px; object-fit: contain; }
+
+.name {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0; min-height: 2.8em; font-size: 14px; font-weight: 700; line-height: 1.4; color: #1f2937; overflow-wrap: anywhere;
+}
+.tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.tag { padding: 2px 9px; border-radius: 999px; background: #eef2ff; color: #1c316f; font-size: 11.5px; font-weight: 700; }
+.tag-price { background: #e6f6ea; color: #17633a; }
+.price { margin: auto 0 0; font-size: 18px; font-weight: 800; color: #1c316f; }
+.detail {
+  display: inline-block; padding: 7px 18px; border-radius: 999px; background: #1c316f; color: #f5e6a8;
+  font-size: 13px; font-weight: 700; text-decoration: none;
+}
+@media (hover: hover) { .detail:hover { background: #142553; } }
+.remove:focus-visible, .detail:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+
+/* มือถือ: การ์ดเลื่อนแนวนอน (หน้าเว็บเองไม่เลื่อน) */
+@media (max-width: 767px) {
+  .cards {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 72%; gap: 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding-bottom: 8px;
+  }
+  .card { scroll-snap-align: start; }
+  .thumb { height: 120px; }
+  .thumb img { max-height: 120px; }
+}
+
+/* จอสัมผัส: ปุ่ม X วงกลม 36px + พื้นที่กดมองไม่เห็นรอบ ๆ = 44px, ปุ่มดูรายละเอียดสูง 44px */
+@media (max-width: 1023px) {
+  .remove { width: 36px; height: 36px; top: 6px; right: 6px; }
+  .remove::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; }
+  .detail { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; }
+}

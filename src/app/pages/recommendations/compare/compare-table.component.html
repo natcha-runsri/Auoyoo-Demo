@@ -1,0 +1,62 @@
+<section class="specs" aria-labelledby="spec-table-title">
+  <div class="bar">
+    <h2 id="spec-table-title" class="title">เปรียบเทียบสเปก</h2>
+    <label class="toggle">
+      <input type="checkbox" role="switch" [checked]="onlyDiff" (change)="onlyDiff = !onlyDiff" />
+      <span class="track" aria-hidden="true"><span class="thumb"></span></span>
+      แสดงเฉพาะที่ต่างกัน
+    </label>
+  </div>
+  <p class="legend">
+    <span class="swatch best-swatch" aria-hidden="true"></span>ค่าที่ดีที่สุด
+    <ng-container *ngIf="recommendedId !== null">
+      <span class="swatch rec-swatch" aria-hidden="true"></span>สินค้าที่ AI แนะนำ
+    </ng-container>
+  </p>
+
+  <div class="wrap">
+    <table class="tbl" [style.--cols]="table.products.length">
+      <caption class="visually-hidden">ตารางเปรียบเทียบสเปกสินค้า {{ table.products.length }} รายการ</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="label corner">หัวข้อ</th>
+          <th *ngFor="let p of table.products; let i = index" scope="col" class="head" [class.rec]="isRecommended(i)">
+            <img [appProductImage]="p.product" alt="" width="52" height="52" loading="lazy" />
+            <span class="head-name" [title]="p.product.productName">{{ p.product.productName }}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of rows; trackBy: trackByKey" [attr.data-key]="row.key">
+          <th scope="row" class="label">{{ row.label }}</th>
+          <td *ngFor="let v of row.values; let i = index" [class.best]="isBest(row, i)" [class.rec]="isRecommended(i)"
+            [class.missing]="v === null">
+            {{ v ?? 'ไม่มีข้อมูล' }}<span *ngIf="isBest(row, i)" class="visually-hidden"> (ดีที่สุด)</span>
+          </td>
+        </tr>
+        <tr *ngIf="onlyDiff && !rows.length">
+          <td class="empty" [attr.colspan]="table.products.length + 1">ทุกหัวข้อมีค่าเหมือนกัน</td>
+        </tr>
+        <tr class="details-row">
+          <th scope="row" class="label">
+            <button type="button" class="details-btn" (click)="detailsOpen = !detailsOpen" [attr.aria-expanded]="detailsOpen"
+              aria-controls="spec-details">
+              รายละเอียดเพิ่มเติม
+              <span class="material-symbols-outlined" aria-hidden="true">{{ detailsOpen ? 'expand_less' : 'expand_more' }}</span>
+            </button>
+          </th>
+          <ng-container *ngIf="detailsOpen; else closed">
+            <td *ngFor="let p of table.products; let i = index" class="details" [class.rec]="isRecommended(i)"
+              [attr.id]="i === 0 ? 'spec-details' : null">
+              {{ p.product.specification || 'ไม่มีข้อมูล' }}
+            </td>
+          </ng-container>
+          <ng-template #closed>
+            <td class="details-closed" [attr.colspan]="table.products.length">ข้อความสเปกเต็มจากร้านค้า (กดเพื่อแสดง)</td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p *ngIf="onlyDiff && hiddenCount" class="hidden-note">ซ่อน {{ hiddenCount }} หัวข้อที่ค่าเหมือนกัน</p>
+</section>

@@ -1,0 +1,39 @@
+<section class="rec-page" [class.rec-page--chat]="mode !== 'compare'" [class.kb-open]="keyboardOpen">
+
+  <ng-container [ngSwitch]="mode">
+
+    <!-- โหมดเปรียบเทียบสินค้า (?ids=) -->
+    <ng-container *ngSwitchCase="'compare'">
+      <app-compare-page [ids]="compareIds"></app-compare-page>
+    </ng-container>
+
+    <!-- AI แนะนำสินค้า (chat) — ?q=คำค้น (ช่องค้นหา navbar / หน้าประวัติ) ถูกส่งเป็นข้อความในแชทนี้ให้เอง -->
+    <ng-container *ngSwitchDefault>
+      <header class="ai-hero">
+        <div class="ai-hero-inner">
+          <div>
+            <nav class="crumbs" aria-label="breadcrumb">
+              <a routerLink="/">หน้าหลัก</a><span aria-hidden="true">/</span><span aria-current="page">การแนะนำ</span>
+            </nav>
+            <h1 class="ai-title">ค้นหาอุปกรณ์ที่ตรงใจมากที่สุด</h1>
+          </div>
+          <!-- กล่องข้อความมีหัวใจ (เส้นสีเหลืองครีม) -->
+          <svg class="ai-hero-icon" viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M10 8h28a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H22l-8 7v-7h-4a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z" />
+            <path d="M24 28.5s-6-3.7-6-8a3.4 3.4 0 0 1 6-2.2 3.4 3.4 0 0 1 6 2.2c0 4.3-6 8-6 8z" />
+          </svg>
+        </div>
+      </header>
+
+      <div class="ai-page">
+        <app-ai-chat-panel [messages]="chatMessages" [loading]="chatLoading" [isLoggedIn]="isLoggedIn"
+          [guestRemaining]="guestRemaining" [guestQuotaMax]="guestQuotaMax" [userAvatar]="userAvatar"
+          [maxLength]="maxMessageLength" [input]="chatInput" (inputChange)="chatInput = $event"
+          (send)="sendQuery()" (auto)="autoRecommend()" (newChat)="newChat()" (login)="requireLoginForAi()"
+          (keyboardChange)="keyboardOpen = $event">
+        </app-ai-chat-panel>
+      </div>
+    </ng-container>
+
+  </ng-container>
+</section>

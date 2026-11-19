@@ -1,0 +1,33 @@
+<div class="user-menu">
+  <button #trigger type="button" class="user-trigger" [class.has-avatar]="loggedIn"
+    (click)="onTriggerClick()" (keydown)="onTriggerKeydown($event)"
+    [attr.aria-haspopup]="loggedIn ? 'menu' : 'dialog'"
+    [attr.aria-expanded]="loggedIn ? open : null"
+    [attr.aria-controls]="loggedIn ? 'user-menu-dropdown' : null"
+    [attr.aria-label]="loggedIn ? 'เมนูผู้ใช้ ' + displayName : null">
+    <span class="user-label">{{ loggedIn ? displayName : 'เข้าสู่ระบบ' }}</span>
+    <span class="avatar" *ngIf="loggedIn">
+      <img [src]="avatarSrc" alt="" (error)="avatarFailed = true" />
+    </span>
+  </button>
+
+  <div *ngIf="open && loggedIn" id="user-menu-dropdown" class="dropdown" role="menu"
+    [attr.aria-label]="'เมนูผู้ใช้ ' + displayName" (keydown)="onMenuKeydown($event)">
+    <p class="dropdown-name" role="presentation" [title]="displayName">{{ displayName }}</p>
+    <div class="dashed-divider" role="separator"></div>
+    <button #menuItem type="button" role="menuitem" tabindex="-1" (click)="navigate('/profile')">
+      <span class="material-symbols-outlined" aria-hidden="true">person</span>โปรไฟล์ผู้ใช้
+    </button>
+    <div class="divider" role="separator"></div>
+    <button #menuItem type="button" role="menuitem" tabindex="-1" (click)="navigate('/history')">
+      <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>ประวัติการใช้งาน
+    </button>
+    <div class="divider" role="separator"></div>
+    <button #menuItem type="button" role="menuitem" tabindex="-1" class="logout" (click)="logout()">
+      <span class="material-symbols-outlined" aria-hidden="true">logout</span>ออกจากระบบ
+    </button>
+  </div>
+</div>
+
+<!-- ยืนยันก่อนออกจากระบบ (ตัวเดียวกับในแผงเมนู ☰) -->
+<app-logout-confirm *ngIf="confirmingLogout" (closed)="onLogoutConfirmClosed()"></app-logout-confirm>

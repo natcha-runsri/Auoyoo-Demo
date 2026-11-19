@@ -1,0 +1,71 @@
+/* แผงเมนูด้านข้าง — ย้ายมาจาก app.component.css ทั้งชุด (หน้าตาเท่าเดิม)
+   2 กฎแรกคัดลอกจาก app.component.css เพราะ style ของ app ไม่ข้ามมาถึง template ของ component นี้ */
+* {
+  box-sizing: border-box;
+}
+
+.material-symbols-outlined {
+  font-size: 30px;
+  color: #1C316F;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.drawer, .drawer-backdrop { display: none; }
+
+/* ===== จอเล็กกว่า 1024px (มือถือ/แท็บเล็ต — breakpoint กลางดู src/styles.css) ===== */
+@media (max-width: 1023px) {
+  .drawer-close:focus-visible, .drawer-nav a:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+
+  /* แผงเมนูเลื่อนจากขวา (ฝั่งเดียวกับปุ่ม ☰) */
+  .drawer-backdrop { display: block; position: fixed; inset: 0; z-index: 1100; background: rgba(12, 30, 60, 0.45); }
+  .drawer {
+    display: flex; flex-direction: column; position: fixed; top: 0; right: 0; bottom: 0; z-index: 1101;
+    width: min(300px, 82vw); height: 100dvh; padding: 12px 16px 24px; background: var(--cream);
+    box-shadow: -8px 0 24px rgba(12, 30, 60, 0.18); transform: translateX(100%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s;
+  }
+  .drawer.open { transform: translateX(0); visibility: visible; transition: transform 0.22s ease; }
+  /* เมนูยาวเกินจอ (จอเตี้ย/แนวนอน) -> เลื่อนในแผงได้ โดยไม่ลากหน้าข้างหลังไปด้วย */
+  .drawer { overflow-y: auto; overscroll-behavior: contain; }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .drawer-head img { width: 48px; height: 48px; object-fit: contain; }
+  .drawer-close {
+    display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+    background: #ece8dd; cursor: pointer;
+  }
+  .drawer-close .material-symbols-outlined { font-size: 24px; }
+  .drawer-nav, .drawer-account { display: flex; flex-direction: column; gap: 4px; }
+  .drawer-nav a, .drawer-account a, .drawer-account button {
+    display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 14px; border-radius: 12px;
+    color: #1c316f; font-size: 17px; font-weight: 700; text-decoration: none;
+  }
+  .drawer-nav a .material-symbols-outlined, .drawer-account .material-symbols-outlined { font-size: 24px; }
+  .drawer-nav a.active, .drawer-account a.active { background: #1c316f; color: #f5e6a8; }
+  .drawer-nav a.active .material-symbols-outlined, .drawer-account a.active .material-symbols-outlined { color: #f5e6a8; }
+  /* เส้นประบาง ๆ คั่นเมนูหลักกับเมนูบัญชี (แบบ .dashed-divider ของ dropdown ผู้ใช้) */
+  .drawer-account { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #9ca3af; }
+  .drawer-account button {
+    width: 100%; border: 0; background: transparent; font-family: inherit; text-align: left; cursor: pointer;
+  }
+  /* ออกจากระบบ: สีแดงเดียวกับ dropdown ผู้ใช้ + เส้นทึบบาง ๆ แยกจากสองรายการแรก */
+  .drawer-account .drawer-logout { position: relative; margin-top: 9px; color: #e5343b; }
+  /* ไอคอนแดงตามตัวหนังสือ — ต้องเจาะจงกว่า .material-symbols-outlined ด้านบนที่ตั้งสีน้ำเงินให้ไอคอนทุกตัว */
+  .drawer-account .drawer-logout .material-symbols-outlined { color: currentColor; }
+  .drawer-account .drawer-logout::before {
+    content: ''; position: absolute; top: -7px; left: 0; right: 0; border-top: 1px solid #e3ddd0;
+  }
+  .drawer-account a:focus-visible, .drawer-account button:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+}
+
+@media (max-width: 1023px) and (hover: hover) {
+  .drawer-nav a:not(.active):hover, .drawer-account a:not(.active):hover { background: #ece8dd; }
+  .drawer-account .drawer-logout:hover { background: #fbe9e9; }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .drawer, .drawer.open { transition: none; }
+}

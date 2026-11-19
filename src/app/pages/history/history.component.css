@@ -1,0 +1,193 @@
+:host {
+  --h-navy: #1c316f;
+  --h-cream: #f5e6a8;
+  --h-board: #dce4ea;
+  --h-row: #fbf0dc;
+  --h-maroon: #3d1428;
+  --h-text: #1f2937;
+  --h-muted: #5b6576;
+  display: block;
+  font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+  color: var(--h-text);
+}
+
+/* ===== แถบหัวหน้า ===== */
+.hist-hero { background: var(--h-navy); color: #fff; }
+.hist-hero-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px var(--page-gutter) 22px;
+}
+.crumbs { display: flex; gap: 6px; font-size: 12.5px; font-weight: 600; color: #fff; }
+.crumbs a { color: #fff; text-decoration: none; }
+@media (hover: hover) { .crumbs a:hover { text-decoration: underline; } }
+.hist-title { margin: 8px 0 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: var(--h-cream); line-height: 1.3; }
+.hist-hero-icon { font-size: clamp(36px, 3.4vw, 48px); color: var(--h-cream); }
+
+/* ===== หน้าหลัก ===== */
+.hist-page { padding: 14px var(--page-gutter) 48px; }
+
+.date-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 42px; padding: 4px 10px 4px 14px; border-radius: 8px; background: #e6e8ee;
+}
+.date-label { margin: 0; font-size: 14.5px; color: #2b3445; }
+.date-controls { display: flex; align-items: center; gap: 6px; }
+.icon-btn {
+  display: grid; place-items: center; width: 30px; height: 30px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--h-navy); cursor: pointer;
+}
+@media (hover: hover) { .icon-btn:hover:not(:disabled) { background: rgba(28, 49, 111, 0.08); } }
+.icon-btn:disabled { color: #b5bccb; cursor: default; }
+.icon-btn .material-symbols-outlined { font-size: 24px; }
+
+.date-picker { position: relative; }
+.today-group {
+  display: inline-flex; align-items: center; height: 28px; border: 1.5px solid var(--h-navy);
+  border-radius: 6px; background: #fff; overflow: hidden;
+}
+.cal-btn, .today-btn {
+  height: 100%; padding: 0 6px; border: 0; background: transparent; color: var(--h-navy);
+  font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+}
+.cal-btn { display: grid; place-items: center; padding: 0 3px 0 6px; }
+.cal-btn .material-symbols-outlined { font-size: 18px; }
+@media (hover: hover) { .cal-btn:hover, .today-btn:hover { background: #eef1f8; } }
+.cal-pop { position: absolute; top: calc(100% + 8px); right: -44px; z-index: 20; }
+
+/* ===== กระดาน 2 คอลัมน์ ===== */
+.board {
+  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  margin-top: 12px; border-radius: 12px; background: var(--h-board);
+}
+.col { min-width: 0; padding: 18px 18px 16px; }
+.col-list {
+  display: flex; flex-direction: column;
+  /* เลื่อนเฉพาะรายการ — หัวข้อ/ตัวกรองค้างอยู่ด้านบน */
+  max-height: 720px;
+  border-right: 1px solid #c3ccd6;
+}
+.col-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.col-title { margin: 0; font-size: 19px; font-weight: 700; color: var(--h-navy); }
+.col-title.center { text-align: center; }
+
+.filter { position: relative; flex: 0 0 auto; }
+.filter-btn {
+  display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px;
+  border: 0; border-radius: 6px; background: #f6e4bf; color: var(--h-navy);
+  font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+}
+.filter-btn .material-symbols-outlined { font-size: 16px; }
+.filter-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 20; min-width: 150px; margin: 0; padding: 4px 0;
+  list-style: none; border-radius: 8px; background: #fff; box-shadow: 0 10px 24px rgba(28, 49, 111, 0.18);
+}
+.filter-menu li + li { border-top: 1px solid #e3e6ec; }
+.filter-item {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 14px; border: 0; background: transparent;
+  font-family: inherit; font-size: 13.5px; color: var(--h-navy); text-align: left; cursor: pointer;
+}
+.filter-item .material-symbols-outlined { font-size: 18px; color: var(--h-maroon); }
+.filter-item:focus { background: #f4f6fb; outline: none; }
+@media (hover: hover) { .filter-item:hover { background: #f4f6fb; } }
+.filter-item.active { font-weight: 700; color: var(--h-maroon); }
+
+.list-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0 -6px; padding: 0 6px 4px; }
+.items { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.item { position: relative; display: flex; align-items: stretch; border-radius: 12px; background: var(--h-row); }
+.item-main {
+  flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto 76px; align-items: center; gap: 12px;
+  min-height: 46px; padding: 6px 4px 6px 22px; border-radius: 12px; color: var(--h-text); text-decoration: none;
+}
+@media (hover: hover) { a.item-main:hover { background: #f8e8c9; } }
+.item-disabled { cursor: default; }
+.item-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14.5px; }
+.badge {
+  justify-self: center; min-width: 56px; padding: 3px 12px; border-radius: 8px; box-sizing: border-box;
+  background: #2c3e75; color: var(--h-cream); font-size: 12.5px; font-weight: 600; text-align: center; white-space: nowrap;
+}
+.badge-view { background: var(--h-maroon); }
+.item-time { font-size: 14px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.item-delete {
+  display: grid; place-items: center; width: 34px; flex: 0 0 34px; margin-right: 4px; padding: 0;
+  border: 0; border-radius: 8px; background: transparent; color: #9a3f1e; cursor: pointer;
+  opacity: 0; transition: opacity 0.15s;
+}
+.item-delete .material-symbols-outlined { font-size: 19px; }
+.item:hover .item-delete, .item:focus-within .item-delete, .item-delete:disabled { opacity: 1; }
+@media (hover: hover) { .item-delete:hover { background: rgba(154, 63, 30, 0.1); } }
+@media (hover: none) { .item-delete { opacity: 1; } }
+
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 56px 12px; color: var(--h-muted); }
+.empty .material-symbols-outlined { font-size: 44px; color: #8a96a8; }
+.empty p { margin: 0; font-size: 15px; }
+.state { margin: 12px 0; font-size: 14px; color: var(--h-muted); text-align: center; }
+.link-btn { padding: 0; border: 0; background: none; color: var(--h-navy); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+.col-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 10px; }
+.delete-error { flex: 1; margin: 0; font-size: 13px; color: #c0392b; }
+.delete-all {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border: 0; border-radius: 6px; background: transparent;
+  color: #9a3f1e; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+@media (hover: hover) { .delete-all:hover { background: rgba(154, 63, 30, 0.08); } }
+.delete-all .material-symbols-outlined { font-size: 18px; }
+
+.icon-btn:focus-visible, .cal-btn:focus-visible, .today-btn:focus-visible, .filter-btn:focus-visible, .item-main:focus-visible,
+.item-delete:focus-visible, .delete-all:focus-visible, .crumbs a:focus-visible, .link-btn:focus-visible {
+  outline: 2px solid #5b8fd6;
+  outline-offset: 2px;
+}
+
+/* ===== มือถือ: วิเคราะห์ย้ายไปใต้รายการ ===== */
+@media (max-width: 767px) {
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .col-list { max-height: 560px; border-right: 0; border-bottom: 1px solid #c3ccd6; }
+}
+
+@media (max-width: 479px) {
+  .hist-hero-inner { padding-top: 14px; padding-bottom: 16px; }
+  .date-bar { padding: 4px 4px 4px 10px; }
+  .date-label { font-size: 13px; }
+  .date-controls { gap: 2px; }
+  .cal-pop { right: -40px; }
+  .col { padding: 14px 12px; }
+  .col-title { font-size: 16px; }
+  .item-main { grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; padding-left: 12px; }
+  .item-text { font-size: 13.5px; }
+  .badge { min-width: 0; padding: 3px 8px; font-size: 11.5px; }
+  .item-time { font-size: 12.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item-delete { transition: none; }
+}
+
+/* จอสัมผัส: ลิงก์ breadcrumb มีพื้นที่กดสูง 44px (ขยายแบบมองไม่เห็น ไม่เปลี่ยนหน้าตา) */
+@media (max-width: 1023px) {
+  .crumbs a { position: relative; }
+  .crumbs a::before { content: ''; position: absolute; inset: -13px -4px; }
+}
+
+/* จอสัมผัส: ปุ่มกดอย่างน้อย 44px */
+@media (max-width: 1023px) {
+  .icon-btn { flex: none; width: 44px; height: 44px; }
+  .today-group { height: 44px; }
+  .cal-btn { min-width: 44px; padding: 0 6px 0 10px; }
+  .today-btn { min-width: 48px; padding: 0 12px 0 8px; font-size: 14px; }
+  .filter-btn { height: 44px; padding: 0 12px; font-size: 13.5px; }
+  .filter-item { min-height: 44px; font-size: 14px; }
+  .item-delete { width: 44px; flex-basis: 44px; margin-right: 0; }
+  .delete-all { min-height: 44px; padding: 4px 12px; font-size: 13.5px; }
+  .link-btn { position: relative; }
+  .link-btn::before { content: ''; position: absolute; inset: -13px -4px; }
+}
+
+/* มือถือ: แถบหัวกรมท่าเตี้ยลง หัวข้อเล็กลง; เนื้อหาเริ่มที่ระยะ --page-top เท่ากันทุกหน้า */
+@media (max-width: 767px) {
+  .hist-hero-inner { padding: 12px var(--page-gutter) 14px; }
+  .crumbs { font-size: 13px; }
+  .hist-title { margin-top: 4px; font-size: 20px; }
+  .hist-hero-icon { font-size: 32px; }
+  .hist-page { padding-top: var(--page-top); }
+}

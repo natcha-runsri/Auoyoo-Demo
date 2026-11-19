@@ -1,0 +1,209 @@
+/* กรอบ modal เดียวที่ใช้ร่วมกันทั้ง Login/Register/Forgot-password/Reset-password
+   ธีมมาจาก CSS variables กลางใน src/styles.css (--bg-modal, --border-modal, --close-bg, ...) */
+
+.auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  /* ไม่หรี่หน้าหลักตามดีไซน์ — overlay โปร่งใสไว้รับคลิกด้านนอกเพื่อปิดเท่านั้น */
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: authModalFadeIn 0.18s ease;
+}
+
+.auth-modal-overlay.closing {
+  animation: authModalFadeOut 0.18s ease forwards;
+}
+
+.auth-modal-box {
+  --modal-pad-y: 40px;
+  --modal-pad-x: 58px;
+  position: relative;
+  width: min(450px, 100%);
+  /* ครีมโปร่งแสงเล็กน้อย เห็นภาพด้านหลังจาง ๆ (blur เบา ๆ ให้ตัวหนังสือยังอ่านง่าย) */
+  background: var(--bg-modal-translucent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  border: 1px solid var(--border-modal);
+  border-radius: 20px;
+  /* ปกติแสดงครบไม่ต้องเลื่อน; จอเตี้ยจริง ๆ (< ~700px) ค่อยเลื่อนภายในกล่อง โดยซ่อน scrollbar ให้ดูสะอาด
+     dvh ไม่นับแถบ address bar บนมือถือ */
+  max-height: 90vh;
+  max-height: 90dvh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: var(--modal-pad-y) var(--modal-pad-x);
+  box-sizing: border-box;
+  font-family: 'Outfit', 'Noto Sans Thai', sans-serif;
+  animation: authModalScaleIn 0.18s ease;
+}
+
+/* กรอบของ "ลืมรหัสผ่าน": ขาวทึบ ขอบกรมท่าบาง ขอบโค้งเล็กน้อย กว้างกว่า login/register */
+.auth-modal-box--plain {
+  --modal-pad-y: 52px;
+  --modal-pad-x: 64px;
+  width: min(680px, 100%);
+  background: #fff;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 1.5px solid #1f2f4d;
+  border-radius: 10px;
+  padding-bottom: 44px;
+}
+
+.auth-modal-box--plain .auth-modal-close {
+  background: #6fa3dc;
+}
+
+/* กรอบของ popup หน้าโปรไฟล์ (แก้ไขอีเมล / เปลี่ยนรหัสผ่าน): พื้นฟ้าอ่อน ขอบฟ้าอ่อน ปุ่ม X ฟ้า */
+.auth-modal-box--soft {
+  --modal-pad-y: 52px;
+  --modal-pad-x: 64px;
+  width: min(720px, 100%);
+  background: #f4f7fc;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 1.5px solid #9cc0ec;
+  border-radius: 12px;
+  padding-bottom: 44px;
+  box-shadow: 0 12px 32px rgba(31, 47, 77, 0.12);
+}
+
+.auth-modal-box--soft .auth-modal-close {
+  background: #6fa3dc;
+}
+
+.auth-modal-box::-webkit-scrollbar {
+  display: none;
+}
+
+/* แถบสูง 0 ที่ "ติด" ขอบบนของกล่องเสมอ (sticky) — ปุ่ม X ลอยอยู่ในแถบนี้ จึงยังเห็นตลอดแม้เลื่อนเนื้อหาในกล่อง
+   (top: 0 = ขอบ padding ของกล่อง ซึ่งเป็นตำแหน่งปกติของแถบอยู่แล้ว -> ไม่เลื่อนตอนยังไม่ scroll) */
+.auth-modal-close-bar {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 2;
+}
+
+.auth-modal-box.closing {
+  animation: authModalScaleOut 0.18s ease forwards;
+}
+
+.auth-modal-close {
+  /* ตำแหน่งเดิม: ห่างขอบบน/ขวาของกล่อง 16px (หักระยะ padding ที่แถบ sticky อยู่) */
+  position: absolute;
+  top: calc(16px - var(--modal-pad-y));
+  right: calc(16px - var(--modal-pad-x));
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--close-bg);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 0;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+@media (hover: hover) { .auth-modal-close:hover { filter: brightness(1.15); transform: scale(1.06); } }
+
+.auth-modal-close:focus-visible {
+  outline: 2px solid var(--title);
+  outline-offset: 2px;
+}
+
+.auth-modal-close .material-symbols-outlined {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.auth-modal-reason {
+  margin: 0 0 20px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* re-mount ทุกครั้งที่สลับ view (ดูคอมเมนต์ใน .html) -> fade สั้น ๆ เฉพาะเนื้อหา ไม่กระทบ overlay/กรอบนอก */
+.auth-modal-view {
+  animation: authModalContentFade 0.18s ease;
+}
+
+@keyframes authModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes authModalFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes authModalScaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes authModalScaleOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.94); }
+}
+
+@keyframes authModalContentFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 479px) {
+  .auth-modal-box--soft {
+    --modal-pad-y: 52px;
+    --modal-pad-x: 18px;
+    padding-bottom: 28px;
+  }
+
+  .auth-modal-box--plain {
+    --modal-pad-y: 44px;
+    --modal-pad-x: 20px;
+    padding-bottom: 28px;
+  }
+
+  /* มือถือ: กล่องกว้างเกือบเต็มจอ (เหลือขอบข้างละ 12px) */
+  .auth-modal-overlay {
+    padding: 12px;
+  }
+
+  .auth-modal-box {
+    --modal-pad-y: 36px;
+    --modal-pad-x: 24px;
+    padding-bottom: 28px;
+    border-radius: 16px;
+  }
+}
+
+/* จอสัมผัส: ปุ่ม X วงกลม 36px + พื้นที่กดมองไม่เห็นรอบ ๆ = 44px */
+@media (max-width: 1023px) {
+  .auth-modal-close { width: 36px; height: 36px; }
+  .auth-modal-close::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-modal-overlay, .auth-modal-box, .auth-modal-view,
+  .auth-modal-overlay.closing, .auth-modal-box.closing {
+    animation-duration: 1ms;
+  }
+}

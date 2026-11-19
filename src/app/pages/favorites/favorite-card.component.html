@@ -1,0 +1,23 @@
+<article class="card" [class.leaving]="leaving" [attr.aria-labelledby]="'fav-name-' + product.id">
+  <button type="button" class="remove" (click)="remove.emit(product)" [disabled]="leaving"
+    [attr.aria-label]="'ลบออกจากรายการโปรด: ' + product.productName" title="ลบออกจากรายการโปรด">
+    <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+  </button>
+
+  <div class="frame">
+    <img [appProductImage]="product" [alt]="product.productName" width="160" height="150" loading="lazy" />
+  </div>
+
+  <h3 class="name" [id]="'fav-name-' + product.id" [title]="product.productName">{{ product.productName }}</h3>
+
+  <ul *ngIf="highlights.length" class="specs" aria-label="สเปกเด่น">
+    <li *ngFor="let h of highlights" class="spec">{{ h }}</li>
+  </ul>
+
+  <p class="saved" [class.empty]="!savedText">{{ savedText }}</p>
+
+  <div class="bottom">
+    <span class="price" [class.no-price]="product.priceMin == null && product.priceMax == null">{{ priceText }}</span>
+    <a class="detail" [routerLink]="['/products', product.id]">ดูรายละเอียด <span aria-hidden="true">→</span></a>
+  </div>
+</article>

@@ -1,0 +1,76 @@
+:host { display: block; --label-w: 170px; }
+
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.title { margin: 0; font-size: 18px; font-weight: 800; color: #1c316f; }
+
+/* สวิตช์ "แสดงเฉพาะที่ต่างกัน" */
+.toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: #1f2937; cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.track { position: relative; width: 38px; height: 22px; border-radius: 999px; background: #c9cdd8; transition: background 0.15s; }
+.thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
+.toggle input:checked + .track { background: #1c316f; }
+.toggle input:checked + .track .thumb { transform: translateX(16px); }
+.toggle input:focus-visible + .track { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+
+.legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0 10px; font-size: 12px; color: #4b5563; }
+.swatch { display: inline-block; width: 14px; height: 14px; border: 1px solid #d1d5db; border-radius: 4px; }
+.swatch + .swatch, .legend .rec-swatch { margin-left: 10px; }
+.best-swatch { background: #dff3e5; }
+.rec-swatch { background: #fff6d6; }
+
+/* position: relative -> ข้อความซ่อน (position: absolute) ในเซลล์อยู่ในกรอบที่เลื่อน ไม่ดันหน้าเว็บให้กว้างเกินจอ */
+.wrap { position: relative; border: 1px solid #d7dbe7; border-radius: 16px; background: #fff; }
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 13.5px; }
+.tbl th, .tbl td { padding: 10px 12px; border-bottom: 1px solid #eceef4; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.label { width: var(--label-w); background: #f7f8fb; color: #1c316f; font-weight: 700; }
+
+/* หัวตาราง (รูป + ชื่อ) ติดด้านบนตอนเลื่อน — จอใหญ่เลื่อนทั้งหน้า จึงติดใต้ header ของเว็บ (--site-header-h) */
+thead th { position: sticky; top: var(--site-header-h, 0px); z-index: 2; background: #fff; box-shadow: inset 0 -2px 0 #d7dbe7; }
+thead .corner { z-index: 3; background: #f7f8fb; vertical-align: bottom; }
+thead tr:first-child th:first-child { border-top-left-radius: 16px; }
+thead tr:first-child th:last-child { border-top-right-radius: 16px; }
+.head { text-align: center; }
+.head img { display: block; width: 52px; height: 52px; margin: 0 auto 6px; object-fit: contain; }
+.head-name {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 12.5px; font-weight: 700; line-height: 1.35; color: #1f2937;
+}
+
+td.rec, th.rec { background: #fff6d6; }
+td.best { background: #dff3e5; color: #14532d; font-weight: 700; }
+td.missing { color: #9ca3af; font-style: italic; }
+.empty { color: #6b7280; text-align: center; }
+
+.details-btn {
+  display: inline-flex; align-items: center; gap: 2px; padding: 0; border: 0; background: none;
+  color: #1c316f; font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+}
+.details-btn .material-symbols-outlined { font-size: 20px; }
+.details-btn:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+.details { font-size: 12.5px; line-height: 1.6; color: #374151; white-space: pre-line; }
+.details-closed { color: #9ca3af; font-size: 12.5px; }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+
+.hidden-note { margin: 8px 0 0; font-size: 12px; color: #6b7280; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* จอแคบ: ตารางเลื่อนในกรอบ (แนวนอน+แนวตั้ง) หัวตารางติดบน คอลัมน์แรกติดซ้าย — หน้าเว็บเองไม่เลื่อนแนวนอน */
+@media (max-width: 1023px) {
+  :host { --label-w: 112px; }
+  .wrap { max-height: 72vh; max-height: 72dvh; overflow: auto; overscroll-behavior: contain; }
+  thead th { top: 0; } /* เลื่อนในกรอบตาราง ไม่ใช่ทั้งหน้า */
+  .tbl { width: auto; min-width: calc(var(--label-w) + var(--cols, 2) * 150px); }
+  .tbl th, .tbl td { padding: 9px 10px; font-size: 13px; }
+  .label { position: sticky; left: 0; z-index: 1; box-shadow: inset -1px 0 0 #e2e5ee; }
+  thead .corner { left: 0; z-index: 4; }
+}
+
+/* จอสัมผัส: ปุ่มกดอย่างน้อย 44px */
+@media (max-width: 1023px) {
+  .toggle { min-height: 44px; font-size: 14px; }
+  .details-btn { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track, .thumb { transition: none; }
+}

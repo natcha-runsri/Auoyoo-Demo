@@ -1,0 +1,34 @@
+<div class="cal" role="dialog" aria-modal="false" aria-labelledby="hist-cal-title">
+  <div class="cal-head">
+    <button type="button" class="cal-nav" (click)="prevMonth()" aria-label="เดือนก่อนหน้า">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+    </button>
+    <h2 id="hist-cal-title" class="cal-title" aria-live="polite">{{ title }}</h2>
+    <button type="button" class="cal-nav" (click)="nextMonth()" [disabled]="!canGoNext" aria-label="เดือนถัดไป">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+    </button>
+  </div>
+
+  <table class="cal-grid" role="grid" aria-labelledby="hist-cal-title" (keydown)="onKeydown($event)">
+    <thead>
+      <tr>
+        <th *ngFor="let d of weekdays" scope="col" [class.sun]="d === 'อา'">{{ d }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let week of weeks">
+        <td *ngFor="let cell of week" [attr.role]="cell.date ? 'gridcell' : null"
+          [attr.aria-selected]="cell.date ? cell.date === selected : null">
+          <button *ngIf="cell.date as date" type="button" class="cal-day" [attr.data-date]="date"
+            [class.today]="date === today" [class.selected]="date === selected" [class.has-history]="activeDays.has(date)"
+            [disabled]="isFuture(date)" [attr.tabindex]="date === focusDate ? 0 : -1"
+            [attr.aria-label]="label(date)" [attr.aria-current]="date === today ? 'date' : null"
+            (click)="pick(date)" (focus)="focusDate = date">
+            <span class="num">{{ cell.day }}</span>
+            <span class="dot" aria-hidden="true"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

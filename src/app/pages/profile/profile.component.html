@@ -1,0 +1,86 @@
+<main class="profile-page">
+  <section class="profile-card" aria-labelledby="profile-title">
+    <h1 id="profile-title" class="visually-hidden">โปรไฟล์ผู้ใช้</h1>
+
+    <!-- ===== รูปโปรไฟล์ ===== -->
+    <div class="avatar-block">
+      <div class="avatar" [class.avatar-preview]="hasPreview">
+        <img [src]="avatarSrc" [alt]="hasPreview ? 'พรีวิวรูปโปรไฟล์ใหม่' : 'รูปโปรไฟล์'" width="168" height="168" (error)="onAvatarError()" />
+        <button #pencilButton *ngIf="!hasPreview" type="button" class="avatar-edit" (click)="chooseAvatar()"
+          [disabled]="uploading" aria-label="เปลี่ยนรูปโปรไฟล์" aria-describedby="avatar-error">
+          <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+        </button>
+      </div>
+      <label class="visually-hidden" for="profile-avatar-file">เลือกรูปโปรไฟล์</label>
+      <input #fileInput id="profile-avatar-file" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp"
+        tabindex="-1" aria-hidden="true" (change)="onFileSelected($event)" />
+
+      <div class="avatar-actions" *ngIf="hasPreview">
+        <button type="button" class="btn btn-primary" (click)="saveAvatar()" [disabled]="uploading" [attr.aria-busy]="uploading">
+          <span class="spinner" *ngIf="uploading" aria-hidden="true"></span>
+          {{ uploading ? 'กำลังบันทึก...' : 'บันทึก' }}
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="cancelAvatar()" [disabled]="uploading">ยกเลิก</button>
+      </div>
+      <p id="avatar-error" class="field-error avatar-error" [class.visible]="!!avatarError" role="alert">{{ avatarError || ' ' }}</p>
+    </div>
+
+    <!-- ===== UserName ===== -->
+    <div class="field">
+      <div class="field-head">
+        <label class="field-label" for="profile-username" id="profile-username-label">UserName</label>
+        <button #editUsernameButton *ngIf="!editingUsername" type="button" class="edit-btn" (click)="startEditUsername()"
+          aria-label="แก้ไข UserName">
+          <span class="material-symbols-outlined" aria-hidden="true">person_edit</span>แก้ไข
+        </button>
+      </div>
+
+      <div *ngIf="!editingUsername; else usernameEditor" class="field-box" aria-labelledby="profile-username-label">
+        {{ user?.username }}
+      </div>
+      <ng-template #usernameEditor>
+        <div class="field-box field-box-edit" [class.field-box-error]="!!usernameError">
+          <input #usernameInput id="profile-username" type="text" [value]="usernameDraft" autocomplete="username"
+            autocapitalize="off" spellcheck="false" maxlength="50" [attr.aria-invalid]="!!usernameError"
+            aria-describedby="profile-username-error" (input)="onUsernameInput($event)" (keydown)="onUsernameKeydown($event)" />
+        </div>
+        <div class="inline-actions">
+          <p id="profile-username-error" class="field-error" [class.visible]="!!usernameError" role="alert">{{ usernameError || ' ' }}</p>
+          <button type="button" class="btn btn-primary btn-sm" (click)="saveUsername()" [disabled]="savingUsername"
+            [attr.aria-busy]="savingUsername">
+            <span class="spinner" *ngIf="savingUsername" aria-hidden="true"></span>
+            {{ savingUsername ? 'กำลังบันทึก...' : 'บันทึก' }}
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm" (click)="cancelUsername()" [disabled]="savingUsername">ยกเลิก</button>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- ===== Email ===== -->
+    <div class="field">
+      <div class="field-head">
+        <span class="field-label" id="profile-email-label">Email</span>
+        <button type="button" class="edit-btn" (click)="editEmail()" aria-label="แก้ไข Email">
+          <span class="material-symbols-outlined" aria-hidden="true">person_edit</span>แก้ไข
+        </button>
+      </div>
+      <div class="field-box" aria-labelledby="profile-email-label">{{ user?.email }}</div>
+    </div>
+
+    <!-- ===== Password (ไม่ดึงรหัสจริงมาแสดง) ===== -->
+    <div class="field">
+      <div class="field-head">
+        <span class="field-label" id="profile-password-label">Password</span>
+      </div>
+      <div class="field-box field-box-dots" aria-labelledby="profile-password-label">
+        <span aria-hidden="true">●●●●●●●●</span><span class="visually-hidden">ซ่อนอยู่</span>
+      </div>
+      <div class="change-password-row">
+        <button type="button" class="change-password" (click)="changePassword()">Change Password</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== โซนอันตราย: ลบบัญชี (ล่างสุดของหน้า) ===== -->
+  <app-delete-account *ngIf="user" [email]="user.email" [hasPassword]="user.hasPassword !== false"></app-delete-account>
+</main>

@@ -1,0 +1,46 @@
+<header class="cmp-hero">
+  <div class="cmp-hero-inner">
+    <div>
+      <nav class="crumbs" aria-label="breadcrumb">
+        <a routerLink="/">หน้าหลัก</a><span aria-hidden="true">/</span><span aria-current="page">เปรียบเทียบสินค้า</span>
+      </nav>
+      <h1 class="cmp-title">เปรียบเทียบสินค้า {{ count }} รายการ</h1>
+    </div>
+    <!-- ตาชั่ง (เส้นสีเหลืองครีม) -->
+    <svg class="cmp-hero-icon" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 7v34M14 41h20M10 13h28M24 10.5a2.5 2.5 0 1 0 0-.01" />
+      <path d="M10 13l-6 13a6 6 0 0 0 12 0L10 13zM38 13l-6 13a6 6 0 0 0 12 0l-6-13zM4 26h12M32 26h12" />
+    </svg>
+  </div>
+</header>
+
+<div class="cmp-page">
+  <p *ngIf="tableLoading && !table" class="state" role="status">กำลังโหลดข้อมูลสินค้า...</p>
+  <div *ngIf="tableError" class="state error" role="alert">
+    {{ tableError }} <button type="button" class="link-btn" (click)="loadTable()">ลองใหม่</button>
+  </div>
+
+  <ng-container *ngIf="table">
+    <p *ngIf="table.products.length < 2" class="state note">
+      เลือกสินค้าอย่างน้อย 2 ชิ้นเพื่อเปรียบเทียบ — <a routerLink="/category">เลือกสินค้าเพิ่ม</a>
+    </p>
+
+    <!-- (A) การ์ดสินค้า -->
+    <app-compare-cards [table]="table" [analysis]="analysisState === 'ok' ? analysis : null" (remove)="remove($event)">
+    </app-compare-cards>
+
+    <!-- (B) สรุปโดย AI -->
+    <app-compare-summary *ngIf="table.products.length >= 2" [state]="analysisState" [analysis]="analysis" [table]="table"
+      [canReanalyze]="canUseAi" (reanalyze)="reanalyze()" (retry)="retryAnalysis()">
+    </app-compare-summary>
+
+    <!-- (C) ตารางสเปก -->
+    <app-compare-table [table]="table" [recommendedId]="analysisState === 'ok' ? recommendedId : null"></app-compare-table>
+
+    <!-- (D) ถาม AI เพิ่ม -->
+    <app-compare-ask *ngIf="table.products.length >= 2" [messages]="askMessages" [loading]="askLoading"
+      [isLoggedIn]="isLoggedIn" [guestRemaining]="guestRemaining" [guestQuotaMax]="guestQuotaMax"
+      (ask)="ask($event)" (login)="requireLogin()">
+    </app-compare-ask>
+  </ng-container>
+</div>

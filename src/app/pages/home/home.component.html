@@ -1,0 +1,70 @@
+<!-- Main -->
+<section class="main">
+  <img src="images/main.svg" alt="Featured tech products" />
+</section>
+
+<!-- Categories -->
+<section class="categories-section">
+  <h2 class="section-title">หมวดหมู่</h2>
+  <!-- แถวเดียวเลื่อนแนวนอน (ปัดนิ้ว/ลูกศร) — ลูกศรซ่อนเองเมื่อสุดทาง ดู updateCategoryArrows() -->
+  <div class="categories-carousel">
+    <button type="button" class="cat-arrow cat-arrow-prev" [class.hidden]="!canScrollPrev"
+      aria-label="เลื่อนหมวดหมู่ไปทางซ้าย" (click)="scrollCategories(-1)">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+    </button>
+
+    <div class="categories-row" #categoriesRow (scroll)="updateCategoryArrows()">
+      <a  class="category-card" #categoryCard
+        *ngFor="let cat of categories"
+        [routerLink]="['/category', cat.slug]"
+      >
+        <div class="category-circle">
+          <img [src]="cat.image" [alt]="cat.name" />
+        </div>
+        <span class="category-name">{{ cat.name }}</span>
+      </a>
+    </div>
+
+    <button type="button" class="cat-arrow cat-arrow-next" [class.hidden]="!canScrollNext"
+      aria-label="เลื่อนหมวดหมู่ไปทางขวา" (click)="scrollCategories(1)">
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+    </button>
+  </div>
+</section>
+
+<section class="gadget-section">
+  <h2 class="title">Gadget ที่ควรมี 2026</h2>
+  <div class="gadget-grid">
+    <a *ngFor="let g of gadgets" class="gadget-card" [ngClass]="'gadget-' + g.area"
+      [routerLink]="['/category', g.slug]" [attr.aria-label]="g.title + ' — ดูสินค้าหมวด' + g.alt">
+      <img [src]="g.image" [alt]="g.alt" loading="lazy" decoding="async" />
+      <span class="gadget-label" [ngClass]="g.label" aria-hidden="true">{{ g.title }}</span>
+    </a>
+  </div>
+</section>
+
+<!-- Promo banner -->
+<section class="promo-banner">
+  <div class="promo-slides" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+    <img *ngFor="let img of promoImages" [src]="img" alt="Keyboards and accessories" />
+  </div>
+
+  <div class="promo-overlay">
+    <h3>Find Your Perfect Tech</h3>
+    <p>ค้นหาอุปกรณ์ไอทีที่เหมาะกับคุณ</p>
+    <p>พร้อมคำแนะนำที่ช่วยให้ตัดสินใจได้ง่ายขึ้น</p>
+  </div>
+
+  <div class="promo-dots">
+    <span
+      *ngFor="let img of promoImages; let i = index"
+      class="dot"
+      [class.active]="i === currentSlide"
+      (click)="goToSlide(i)"
+    ></span>
+  </div>
+  
+</section>
+
+<footer class="footer"></footer>
+  

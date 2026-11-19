@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: เมาส์">
+  <!-- AuoYoo product mockup (mouse) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="158" y="112" width="84" height="134" rx="42"/>
+      <path d="M200 112 V160 M158 160 H242"/>
+      <path fill="none" d="M200 112 C200 88 230 82 240 70"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">เมาส์</text>
+</svg>

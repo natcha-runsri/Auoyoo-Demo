@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+/* แถวเดียวเสมอ — มือถือจอแคบช่องหดลงเอง (flex 1 + max-width) ไม่ขึ้นบรรทัดใหม่ */
+.otp {
+  display: flex;
+  gap: clamp(6px, 2vw, 14px);
+}
+
+.otp-box {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 52px;
+  height: 60px;
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid #b9cdea;
+  border-radius: 6px;
+  background: #f4f8fe;
+  color: #1f2f4d;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.otp-box:focus {
+  border-color: #5b8fd6;
+  box-shadow: 0 0 0 3px rgba(91, 143, 214, 0.2);
+}
+
+.otp-invalid .otp-box {
+  border-color: #c0392b;
+  background: #fdf1f0;
+}
+
+.otp-box:disabled {
+  opacity: 0.6;
+}
+
+@media (max-width: 479px) {
+  .otp-box {
+    height: 52px;
+    font-size: 21px;
+  }
+}

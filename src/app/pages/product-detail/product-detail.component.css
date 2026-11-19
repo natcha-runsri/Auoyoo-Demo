@@ -1,0 +1,151 @@
+/* แถบหัวสีกรมท่าเต็มจอ (แบบเดียวกับหน้าประวัติ/รายการโปรด) */
+.pd-hero { background: #1c316f; color: #fff; }
+.pd-hero-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px var(--page-gutter) 22px; }
+.crumbs { display: flex; gap: 6px; font-size: 12.5px; font-weight: 600; }
+.crumbs a { color: #fff; text-decoration: none; }
+@media (hover: hover) { .crumbs a:hover { text-decoration: underline; } }
+.crumbs a:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+.pd-hero-title { margin: 8px 0 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: #f5e6a8; }
+/* ไอคอนเส้นชุดเดียวกับเมนูหน้าหมวดหมู่ สีเหลืองครีม */
+.pd-hero-icon {
+  flex: 0 0 auto; font-size: clamp(40px, 3.6vw, 56px); color: #f5e6a8;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+}
+
+.pd-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+}
+
+.pd-note {
+  color: #6b7280;
+}
+
+.pd-error {
+  color: #dc2626;
+}
+
+.pd-body {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.pd-image {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  background: #f3f4f6;
+  border-radius: 12px;
+}
+
+.pd-info {
+  flex: 1;
+  min-width: 260px;
+}
+
+.pd-badge {
+  display: inline-block;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  font-size: 11px;
+  padding: 2px 10px;
+  color: #374151;
+}
+
+.pd-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 10px 0;
+}
+
+.pd-brand,
+.pd-spec {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 6px 0;
+}
+
+.pd-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 16px 0;
+}
+
+.pd-price.has-date {
+  margin-bottom: 2px;
+}
+
+.pd-price-date {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: #8a8f98;
+}
+
+.pd-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #1c316f;
+  color: #fbd9a4;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .pd-source-link:hover { background: #16305c; }
+}
+
+.pd-source-link:focus-visible {
+  outline: 3px solid #fbd9a4;
+  outline-offset: 2px;
+}
+
+.pd-source-link .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* รายการโปรด | เปรียบเทียบ — ตัวอักษร/ไอคอนสีกรมท่า ไม่มีพื้น คั่นด้วยเส้นตั้ง */
+.pd-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 0 0 18px; }
+.pd-action {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 2px; border: 0; background: none;
+  color: #1c316f; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.pd-action .material-symbols-outlined { font-size: 22px; font-variation-settings: 'FILL' 0; }
+.pd-action .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1; }
+@media (hover: hover) { .pd-action:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 3px; } }
+.pd-action:disabled { opacity: 0.45; cursor: not-allowed; }
+.pd-action:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; border-radius: 6px; }
+.pd-action-wrap { display: inline-flex; }
+.pd-divider { width: 2px; height: 24px; border-radius: 1px; background: #1c316f; }
+
+/* มือถือ: แถวเดียวถ้าพอ ไม่พอเรียงลงมาเป็น 2 แถว (flex-wrap) — จอแคบมากย่อตัวอักษรลงเล็กน้อยให้พอแถวเดียว */
+@media (max-width: 479px) {
+  .pd-actions { gap: 4px 12px; }
+  .pd-action { font-size: 13px; }
+}
+
+/* จอสัมผัส: ลิงก์ breadcrumb มีพื้นที่กดสูง 44px (ขยายแบบมองไม่เห็น ไม่เปลี่ยนหน้าตา) */
+@media (max-width: 1023px) {
+  .crumbs a { position: relative; }
+  .crumbs a::before { content: ''; position: absolute; inset: -13px -4px; }
+  /* ปุ่มรายการโปรด/เปรียบเทียบ และปุ่มดูที่ร้าน สูง 44px */
+  .pd-action { min-height: 44px; }
+  .pd-source-link { min-height: 44px; box-sizing: border-box; }
+}
+
+/* มือถือ: แถบหัวกรมท่าเตี้ยลง หัวข้อเล็กลง; เนื้อหาเริ่มที่ระยะ --page-top เท่ากันทุกหน้า */
+@media (max-width: 767px) {
+  .pd-hero-inner { padding: 12px var(--page-gutter) 14px; }
+  .crumbs { font-size: 13px; }
+  .pd-hero-title { margin-top: 4px; font-size: 20px; }
+  .pd-hero-icon { font-size: 32px; }
+  .pd-page { padding: var(--page-top) var(--page-gutter) 64px; }
+}

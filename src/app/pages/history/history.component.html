@@ -1,0 +1,119 @@
+<!-- ===== แถบหัวหน้า (เต็มความกว้างจอ) ===== -->
+<header class="hist-hero">
+  <div class="hist-hero-inner">
+    <div>
+      <nav class="crumbs" aria-label="breadcrumb">
+        <a routerLink="/">หน้าหลัก</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">ประวัติการใช้งาน</span>
+      </nav>
+      <h1 class="hist-title">ประวัติและวิเคราะห์การใช้งาน</h1>
+    </div>
+    <span class="material-symbols-outlined hist-hero-icon" aria-hidden="true">history</span>
+  </div>
+</header>
+
+<main class="hist-page">
+  <!-- ===== แถบเลือกวัน ===== -->
+  <div class="date-bar">
+    <p class="date-label" aria-live="polite">{{ dateLabel }}</p>
+    <div class="date-controls">
+      <button type="button" class="icon-btn" (click)="previousDay()" aria-label="วันก่อนหน้า">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+      </button>
+      <div class="date-picker">
+        <div class="today-group">
+          <button #calendarButton type="button" class="cal-btn" (click)="toggleCalendar()"
+            aria-label="เลือกวันจากปฏิทิน" aria-haspopup="dialog" [attr.aria-expanded]="calendarOpen">
+            <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+          </button>
+          <button type="button" class="today-btn" (click)="goToday()" [attr.aria-pressed]="isToday">วันนี้</button>
+        </div>
+        <app-history-calendar *ngIf="calendarOpen" class="cal-pop" [selected]="date" [today]="today" [activeDays]="activeDays"
+          (dateSelected)="onCalendarPick($event)" (monthChange)="loadActiveDays($event)" (closed)="closeCalendar()"></app-history-calendar>
+      </div>
+      <button type="button" class="icon-btn" (click)="nextDay()" [disabled]="isToday" aria-label="วันถัดไป">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="board">
+    <!-- ===== ฝั่งซ้าย: ประวัติ ===== -->
+    <section class="col col-list" aria-labelledby="hist-list-title">
+      <div class="col-head">
+        <h2 id="hist-list-title" class="col-title">ประวัติการค้นหาและเข้าชม</h2>
+        <div class="filter">
+          <button #filterButton type="button" class="filter-btn" (click)="toggleFilter()" (keydown)="onFilterButtonKeydown($event)"
+            aria-haspopup="menu" [attr.aria-expanded]="filterOpen" aria-controls="hist-filter-menu">
+            <span class="material-symbols-outlined" aria-hidden="true">{{ filterIcon }}</span>
+            กรอง: {{ filterLabel }}
+          </button>
+          <ul *ngIf="filterOpen" id="hist-filter-menu" class="filter-menu" role="menu" aria-label="กรองประวัติ">
+            <li *ngFor="let option of filterOptions; let i = index" role="presentation">
+              <button #filterItem type="button" role="menuitemradio" class="filter-item" tabindex="-1"
+                [attr.aria-checked]="option.value === filter" [class.active]="option.value === filter"
+                (click)="chooseFilter(option.value)" (keydown)="onFilterMenuKeydown($event, i)">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ option.icon }}</span>{{ option.label }}
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="list-scroll">
+        <p *ngIf="loadingDay && !day" class="state" role="status">กำลังโหลด...</p>
+        <div *ngIf="dayError" class="state" role="alert">
+          {{ dayError }} <button type="button" class="link-btn" (click)="retry()">ลองใหม่</button>
+        </div>
+
+        <ul *ngIf="day && visibleItems.length" class="items" [attr.aria-busy]="loadingDay">
+          <li *ngFor="let item of visibleItems; trackBy: trackById" class="item">
+            <ng-container *ngIf="itemLink(item) as link; else plain">
+              <a class="item-main" [routerLink]="link.path" [queryParams]="link.query"
+                [attr.title]="item.detail || null" [attr.aria-label]="itemAction(item) + item.title + (item.detail ? ' (' + item.detail + ')' : '') + ' เวลา ' + item.time + ' น.'">
+                <ng-container *ngTemplateOutlet="row; context: { $implicit: item }"></ng-container>
+              </a>
+            </ng-container>
+            <ng-template #plain>
+              <div class="item-main item-disabled" title="สินค้านี้ไม่มีในระบบแล้ว">
+                <ng-container *ngTemplateOutlet="row; context: { $implicit: item }"></ng-container>
+              </div>
+            </ng-template>
+            <button type="button" class="item-delete" (click)="deleteItem(item)" [disabled]="deletingId === item.id"
+              [attr.aria-label]="'ลบรายการ ' + itemText(item) + ' เวลา ' + item.time + ' น.'">
+              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+            </button>
+          </li>
+        </ul>
+
+        <div *ngIf="day && !visibleItems.length && !dayError" class="empty">
+          <span class="material-symbols-outlined" aria-hidden="true">history_toggle_off</span>
+          <p>{{ emptyMessage }}</p>
+        </div>
+      </div>
+
+      <div class="col-foot">
+        <p class="delete-error" role="alert">{{ confirmDeleteAll ? '' : deleteError }}</p>
+        <button #deleteAllButton type="button" class="delete-all" (click)="openDeleteAll()">
+          <span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>ลบประวัติทั้งหมด
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== ฝั่งขวา: วิเคราะห์ ===== -->
+    <app-history-analysis class="col-analysis" [summary]="summary" [range]="range" [rangeLabel]="rangeLabel"
+      [loading]="loadingSummary" [error]="summaryError" (rangeChange)="setRange($event)" (retry)="retry()"></app-history-analysis>
+  </div>
+</main>
+
+<ng-template #row let-item>
+  <span class="item-text">{{ itemText(item) }}</span>
+  <span class="badge" [class.badge-view]="item.type === 'VIEW'">{{ item.type === 'VIEW' ? 'เข้าชม' : item.source === 'COMPARE' ? 'เปรียบเทียบ' : item.chatId ? 'แชท AI' : 'ค้นหา' }}</span>
+  <span class="item-time">{{ item.time }} น.</span>
+</ng-template>
+
+<!-- ===== กล่องยืนยันลบทั้งหมด ===== -->
+<app-confirm-dialog *ngIf="confirmDeleteAll" title="ลบประวัติทั้งหมด?"
+  message="ประวัติการค้นหาและเข้าชมทั้งหมดของคุณ (ทุกวัน) จะถูกลบถาวร และกู้คืนไม่ได้" confirmLabel="ลบทั้งหมด" busyLabel="กำลังลบ..."
+  [busy]="deletingAll" [error]="deleteError" (confirmed)="deleteAll()" (cancelled)="cancelDeleteAll()"></app-confirm-dialog>

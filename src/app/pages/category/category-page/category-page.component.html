@@ -1,0 +1,114 @@
+<section class="hero-wrap">
+  <!-- รูปพื้นหลัง ("See what's new." อยู่ในรูป) -->
+  <div class="hero">
+    <img src="images/hero.svg" alt="See what's new" class="hero-bg" />
+  </div>
+  <!-- คำ Category ซ้อนชั้นกับกล่องขาว: C g y อยู่หน้ากล่อง (เห็นหาง g/y บนกล่อง) ตัวอื่นอยู่หลังกล่อง
+       h1 ต้องไม่สร้าง stacking context เอง (ห้าม transform/opacity/z-index) ไม่งั้นทุกตัวอยู่ชั้นเดียวกัน -->
+  <h1 class="hero-title" aria-label="Category"><span class="l front" aria-hidden="true">C</span><span class="l" aria-hidden="true">a</span><span class="l" aria-hidden="true">t</span><span class="l" aria-hidden="true">e</span><span class="l front" aria-hidden="true">g</span><span class="l" aria-hidden="true">o</span><span class="l" aria-hidden="true">r</span><span class="l front" aria-hidden="true">y</span></h1>
+
+  <!-- กล่องขาวที่ซ้อนทับขึ้นไปบนรูป -->
+  <div class="hero-search-section">
+    <h2 class="hero-caption">มอบทุกสิ่งที่คุณต้องการ</h2>
+    <form class="hero-search-box" role="search" (submit)="$event.preventDefault(); onSearch()">
+      <span class="material-symbols-outlined search-icon" aria-hidden="true">manage_search</span>
+      <label class="visually-hidden" for="category-search">ค้นหาสินค้า</label>
+      <input id="category-search" type="search" placeholder="ค้นหาอุปกรณ์ที่ใช้ของคุณ" [(ngModel)]="searchKeyword"
+        name="q" autocomplete="off" />
+      <button type="submit">ค้นหา</button>
+    </form>
+  </div>
+</section>
+
+<div class="page">
+  <!-- มือถือ: sidebar ซ่อน เปิดเป็นแผงจากด้านข้าง -->
+  <div class="mobile-bar">
+    <button #filterToggle type="button" class="filter-toggle" (click)="openFilters()" aria-controls="category-filters"
+      [attr.aria-expanded]="filtersOpen">
+      <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      ตัวกรอง<span *ngIf="activeFilterCount" class="filter-count">{{ activeFilterCount }}</span>
+    </button>
+    <span *ngIf="selectedNode" class="mobile-current">{{ selectedNode.name }}</span>
+  </div>
+  <div *ngIf="filtersOpen" class="filter-overlay" (click)="closeFilters()" aria-hidden="true"></div>
+
+  <aside #sidebar id="category-filters" class="sidebar" [class.open]="filtersOpen" aria-label="ตัวกรองสินค้า">
+    <div class="drawer-head">
+      <span class="drawer-title">ตัวกรอง</span>
+      <button type="button" class="drawer-close" (click)="closeFilters()" aria-label="ปิดตัวกรอง">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <h2 class="side-title">หมวดหมู่</h2>
+    <app-category-tree [categories]="categories" [selectedSlug]="selectedSlug" [brands]="brandOptions"
+      [brandsLoading]="brandsLoading" [selectedBrands]="brands"
+      (categorySelect)="onCategorySelect($event)" (brandToggle)="onBrandToggle($event)">
+    </app-category-tree>
+
+    <h2 class="side-title">งบประมาณ</h2>
+    <app-price-range [floor]="priceFloor" [ceiling]="priceCeiling" [value]="price" (rangeChange)="onPriceRangeChange($event)">
+    </app-price-range>
+
+    <button *ngIf="hasActiveFilters" type="button" class="clear-btn" (click)="clearFilters()">
+      <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>ล้างตัวกรอง
+    </button>
+
+    <button type="button" class="drawer-done" (click)="closeFilters()">
+      ดูสินค้า{{ loading ? '' : ' (' + totalElements.toLocaleString('en-US') + ')' }}
+    </button>
+  </aside>
+
+  <main #listTop class="content" aria-labelledby="category-results-title">
+    <h2 id="category-results-title" class="visually-hidden">
+      {{ selectedNode?.name || 'อุปกรณ์ทั้งหมด' }}{{ keyword ? ' — ผลการค้นหา "' + keyword + '"' : '' }}
+    </h2>
+    <p *ngIf="keyword" class="search-note">ผลการค้นหา "<strong>{{ keyword }}</strong>"</p>
+
+    <!-- โหลด: การ์ดโครงสีเทา 9 ใบ -->
+    <div *ngIf="loading" class="grid" aria-busy="true" role="status" aria-label="กำลังโหลดสินค้า">
+      <div class="skeleton" *ngFor="let i of skeletons">
+        <div class="sk-media"></div>
+        <div class="sk-line"></div>
+        <div class="sk-line short"></div>
+        <div class="sk-row"><div class="sk-line tiny"></div><div class="sk-dot"></div><div class="sk-dot"></div></div>
+        <div class="sk-btn"></div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <div *ngIf="error" class="state" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+        <p>{{ error }}</p>
+        <button type="button" class="state-btn" (click)="retry()">ลองใหม่</button>
+      </div>
+
+      <div *ngIf="!error && !products.length" class="state">
+        <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+        <p>ไม่พบสินค้าที่ตรงกับตัวกรอง</p>
+        <button *ngIf="hasActiveFilters" type="button" class="state-btn" (click)="clearFilters()">ล้างตัวกรอง</button>
+      </div>
+
+      <div *ngIf="products.length" class="grid">
+        <app-product-card *ngFor="let p of products; trackBy: trackByProductId" [product]="p"></app-product-card>
+      </div>
+    </ng-container>
+
+    <nav *ngIf="totalPages > 1" class="pagination" aria-label="เลือกหน้า">
+      <button type="button" class="nav-btn" (click)="goToPage(page - 1)" [disabled]="page <= 1">
+        <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>ก่อนหน้า
+      </button>
+      <div class="pages">
+        <ng-container *ngFor="let item of pageItems">
+          <span *ngIf="item === '...'" class="ellipsis" aria-hidden="true">…</span>
+          <button *ngIf="item !== '...'" type="button" class="page-btn" [class.active]="item === page"
+            [attr.aria-current]="item === page ? 'page' : null" [attr.aria-label]="'หน้า ' + item"
+            (click)="goToPage(item)">{{ item }}</button>
+        </ng-container>
+      </div>
+      <button type="button" class="nav-btn" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">
+        ถัดไป<span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      </button>
+    </nav>
+  </main>
+</div>

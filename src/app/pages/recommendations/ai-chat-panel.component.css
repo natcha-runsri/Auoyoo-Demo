@@ -1,0 +1,192 @@
+:host {
+  --c-navy: #1c316f;
+  --c-cream: #f5e6a8;
+  --c-bubble: #eef6fb;
+  --c-border: #c7c3e0;
+  --page-bg: #fdfbf3;
+  /* แถบกรมท่าท้ายจอ / ระยะขอบล่างของช่องพิมพ์ (ช่องพิมพ์ครึ่งล่างทับแถบ) */
+  --band-h: 64px;
+  --composer-bottom: 30px;
+  /* แป้นพิมพ์มือถือเปิด -> ยกแถบ + ช่องพิมพ์ขึ้นเท่าที่ถูกบัง (ตั้งจาก visualViewport ใน component) */
+  --kb-offset: 0px;
+  /* ตัวนี้คือกล่องที่เลื่อน (หน้าเว็บไม่เลื่อน) */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 22px var(--page-gutter) 0;
+  font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+}
+/* ที่ว่างท้ายรายการเท่าช่องพิมพ์ที่ลอยทับ (--dock-space วัดจริงใน component) + แถบเปรียบเทียบที่ซ้อนเหนือช่องพิมพ์
+   (--chat-dock-extra ตั้งบน body) ข้อความสุดท้ายจึงไม่ถูกบัง — เป็นเนื้อหาที่เลื่อนได้ ไม่ใช่ padding
+   จอเตี้ยมาก (แป้นพิมพ์เปิด) กล่องจึงหดได้จริง ไม่ดันทั้งหน้าให้สูงเกินจอ */
+:host::after { content: ''; flex: 0 0 calc(var(--dock-space, 132px) + var(--chat-dock-extra, 0px) + 12px); }
+.defs { position: absolute; width: 0; height: 0; }
+
+/* กล่องแชท: สูงตามข้อความ (เลื่อนใน :host) — ยังไม่เริ่มแชท/ข้อความน้อย = ยืดเต็มพื้นที่เหนือช่องพิมพ์ */
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  border: 1px solid var(--c-border);
+  border-radius: 28px;
+  background: #fff;
+}
+.toolbar { display: flex; justify-content: flex-end; padding: 10px 16px 0; }
+.new-chat {
+  display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border: 1px solid var(--c-border); border-radius: 999px;
+  background: #fff; color: var(--c-navy); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+}
+.new-chat .material-symbols-outlined { font-size: 17px; }
+.new-chat:disabled { opacity: 0.5; cursor: default; }
+
+.log { flex: 1; display: flex; flex-direction: column; padding: 22px 26px 28px; }
+
+/* ===== ยังไม่เริ่มแชท ===== */
+.welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.logo-frame { display: grid; place-items: center; width: 92px; height: 88px; border: 1px solid #b9bcc6; border-radius: 10px; background: #fff; }
+.logo-frame img { width: 78px; height: 78px; object-fit: contain; }
+.welcome-title { margin: 14px 0 6px; font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; color: var(--c-navy); }
+.welcome-text { margin: 0; max-width: 560px; font-size: 13.5px; color: #4b5563; }
+.auto-btn {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; padding: 9px 22px; border: 0; border-radius: 999px;
+  background: var(--c-navy); color: var(--c-cream); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.auto-btn .material-symbols-outlined { font-size: 18px; }
+.auto-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ===== ข้อความ ===== */
+.messages { display: flex; flex-direction: column; gap: 14px; padding-top: 18px; }
+.msg { display: flex; align-items: flex-start; gap: 8px; }
+.msg.user { flex-direction: row-reverse; }
+.avatar { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #e5e7eb; }
+.avatar.bot { display: grid; place-items: center; background: var(--c-navy); }
+.avatar.bot svg { width: 22px; height: 22px; }
+.content { display: flex; flex-direction: column; gap: 8px; min-width: 0; max-width: 70%; }
+.msg.user .content { align-items: flex-end; }
+.bubble {
+  margin: 0; padding: 10px 22px; border-radius: 22px; background: var(--c-bubble); color: #1f2937;
+  font-size: 13.5px; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere;
+}
+
+/* การ์ดสินค้า: กล่องฟ้าอ่อน เลื่อนแนวนอน (ข้อความไม่ยืดยาวตามจำนวนสินค้า) */
+.products {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 210px; gap: 16px; max-width: min(100%, 720px);
+  padding: 16px; border-radius: 22px; background: var(--c-bubble); overflow-x: auto; scroll-snap-type: x proximity;
+}
+.products > * { scroll-snap-align: start; }
+.msg:has(.products) .content { max-width: calc(100% - 46px); }
+
+.typing { display: inline-flex; gap: 5px; padding: 14px 20px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #6b7a99; animation: blink 1.2s infinite ease-in-out; }
+.dot:nth-of-type(2) { animation-delay: 0.2s; }
+.dot:nth-of-type(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+/* ===== แถบกรมท่าท้ายจอ + ช่องพิมพ์ (ล็อกกับจอ) ===== */
+.band {
+  position: fixed; left: 0; right: 0; bottom: var(--kb-offset); z-index: 150;
+  height: var(--band-h); background: var(--c-navy);
+}
+/* ไล่สีจากพื้นหลังเป็นโปร่งใสเหนือแถบ — ข้อความที่เลื่อนผ่านไม่ตัดกันแข็ง ๆ */
+.band::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: 44px; pointer-events: none;
+  background: linear-gradient(to top, var(--page-bg), rgba(253, 251, 243, 0));
+}
+
+/* ยึดขอบล่าง -> textarea ขยายขึ้นด้านบน ไม่ล้นจอ */
+.composer-wrap {
+  position: fixed; left: 50%; bottom: calc(var(--composer-bottom) + var(--kb-offset)); z-index: 151;
+  width: calc((100% - 2 * var(--page-gutter)) * 0.85); transform: translateX(-50%);
+}
+.composer {
+  position: relative; padding: 12px 56px 12px 18px; border: 1.5px solid #5f5aa2; border-radius: 12px; background: #fffdf8;
+  box-shadow: 0 6px 18px rgba(28, 49, 111, 0.18);
+}
+.composer:focus-within { box-shadow: 0 0 0 3px rgba(95, 90, 162, 0.2), 0 6px 18px rgba(28, 49, 111, 0.18); }
+.composer.disabled { background: #f3f4f6; }
+textarea {
+  display: block; width: 100%; min-height: 50px; padding: 0; border: 0; outline: none; background: transparent; resize: none;
+  font: inherit; font-size: 14px; line-height: 22px; color: #1f2937;
+}
+textarea::placeholder { color: #8a8f9c; }
+
+/* ปุ่มส่งตามดีไซน์: พื้นฟ้าอมเขียวอ่อน ลูกศรกรมท่าเข้ม — จางเฉพาะตอนช่องว่าง/AI กำลังตอบ */
+.send {
+  position: absolute; right: 10px; bottom: 10px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0;
+  border: 0; border-radius: 7px; background: #c4ebe6; color: #0f1f4d; cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+@media (hover: hover) { .send:hover:not(:disabled) { background: #a9e0da; } }
+.send .material-symbols-outlined { font-size: 21px; font-variation-settings: 'FILL' 1; }
+.send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ปุ่มวงกลม "ไปข้อความล่าสุด" ลอยเหนือช่องพิมพ์ */
+/* มีแถบเปรียบเทียบซ้อนเหนือช่องพิมพ์ -> ยกปุ่มขึ้นเหนือแถบ (--compare-stack ตั้งจาก component) */
+.jump {
+  position: absolute; left: 50%; bottom: calc(100% + 14px + var(--compare-stack, 0px)); transform: translateX(-50%);
+  display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--c-border); border-radius: 50%;
+  background: #fff; color: var(--c-navy); box-shadow: 0 4px 14px rgba(28, 49, 111, 0.22); cursor: pointer;
+}
+.jump .material-symbols-outlined { font-size: 22px; }
+@media (hover: hover) { .jump:hover { background: #f4f3fb; } }
+
+/* ข้อความโควตา guest ติดช่องพิมพ์ (ล็อกไปด้วยกัน) — มีพื้นจาง ๆ อ่านออกเวลาข้อความแชทเลื่อนผ่านข้างใต้ */
+.quota {
+  position: absolute; top: -24px; right: 6px; margin: 0; padding: 1px 8px; border-radius: 6px; background: rgba(253, 251, 243, 0.92);
+  font-size: 11.5px; color: #6b7280; white-space: nowrap;
+}
+.quota strong { color: var(--c-navy); }
+.quota strong.low { color: #8b1d1d; }
+.quota.out { color: #8b1d1d; font-weight: 600; }
+.link { padding: 0 2px; border: 0; background: none; color: var(--c-navy); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+.new-chat:focus-visible, .auto-btn:focus-visible, .send:focus-visible, .link:focus-visible, .jump:focus-visible {
+  outline: 2px solid #5b8fd6; outline-offset: 2px;
+}
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 767px) {
+  :host { --band-h: 56px; --composer-bottom: 18px; padding-top: var(--page-top); }
+  .panel { border-radius: 18px; }
+  .log { padding: 16px 12px 20px; }
+  .content { max-width: 85%; }
+  .products { grid-auto-columns: 168px; gap: 10px; padding: 10px; }
+  /* มือถือ: ช่องพิมพ์กว้างเกือบเต็มจอ ข้อความโควตาอยู่เหนือช่องพิมพ์ */
+  .composer-wrap { width: calc(100% - 16px); display: flex; flex-direction: column; }
+  .quota { position: static; order: -1; margin: 0 0 4px; padding: 2px 6px; text-align: right; white-space: normal; }
+}
+
+/* มือถือ/แท็บเล็ต: ช่องพิมพ์ 16px ขึ้นไป — iPhone ไม่ซูมหน้าเว็บตอนแตะช่องพิมพ์ */
+@media (max-width: 1023px) {
+  textarea { font-size: 16px; }
+}
+
+/* จอสัมผัส: ปุ่มกดอย่างน้อย 44px (ลิงก์ในข้อความโควตา: ขยายพื้นที่กดที่มองไม่เห็น) */
+@media (max-width: 1023px) {
+  .new-chat { min-height: 44px; padding: 6px 14px; font-size: 13.5px; }
+  .auto-btn { min-height: 44px; }
+  .composer { padding-right: 60px; }
+  .send { right: 8px; bottom: 8px; width: 44px; height: 44px; }
+  .jump { width: 44px; height: 44px; }
+  .link { position: relative; }
+  .link::before { content: ''; position: absolute; inset: -13px -4px; }
+}
+
+/* มือถือจอเล็ก (< 600px): ช่องพิมพ์กะทัดรัด — เริ่ม 1 บรรทัด (rows / placeholder สั้นตั้งใน component) ขยายได้ถึง 4 บรรทัด
+   ตัวอักษร 16px ตามกฎ < 1024px ด้านบน (iOS ไม่ซูมเอง); ปุ่มส่ง 40px; --dock-space วัดความสูงใหม่เอง (ResizeObserver) */
+@media (max-width: 599px) {
+  :host { --band-h: 40px; --composer-bottom: 8px; }
+  .composer-wrap { width: calc(100% - 12px); }
+  .composer { padding: 9px 50px 9px 12px; }
+  textarea { min-height: 24px; line-height: 24px; }
+  .send { right: 4px; bottom: 1px; width: 40px; height: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none; opacity: 0.6; }
+  .send { transition: none; }
+}

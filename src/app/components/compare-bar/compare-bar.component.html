@@ -1,0 +1,45 @@
+<ng-container *ngIf="items$ | async as items">
+<ng-container *ngIf="items.length > 0">
+<!-- ที่ว่างในหน้า (สูงเท่าแถบลอย) -> เลื่อนเนื้อหาท้ายหน้าพ้นแถบได้เสมอ ไม่โดนบังจนกดไม่ได้ -->
+<!-- หน้าแชท AI (docked): หน้าแชทเผื่อที่ว่างท้ายหน้าให้เอง -->
+<div class="cb-spacer" *ngIf="!docked" aria-hidden="true" [style.height.px]="barHeight"></div>
+
+<section #bar class="compare-bar" [class.collapsed]="collapsed" [class.docked]="docked"
+  [style.bottom.px]="docked ? dockBottom : null" aria-label="แถบเปรียบเทียบสินค้า">
+  <div class="cb-header">
+    <button class="cb-toggle" type="button" (click)="toggleCollapsed()"
+      [attr.aria-expanded]="!collapsed" aria-label="ย่อ/ขยายแถบเปรียบเทียบ">
+      <span class="material-symbols-outlined cb-arrow" aria-hidden="true">{{ collapsed ? 'expand_less' : 'expand_more' }}</span>
+      <span class="material-symbols-outlined cb-icon" aria-hidden="true">compare</span>
+      <span class="cb-title">เปรียบเทียบ</span>
+      <span class="cb-count">{{ items.length }}/{{ max }}</span>
+    </button>
+
+    <!-- หน้าแชท AI แบบย่อ: เหลือปุ่มเปรียบเทียบ (ไม่มีล้างทั้งหมด/การ์ด) -->
+    <div class="cb-header-actions" *ngIf="!collapsed || docked">
+      <button class="cb-clear" type="button" *ngIf="!collapsed" (click)="clearAll()">ล้างทั้งหมด</button>
+      <button class="cb-compare" type="button" (click)="compareNow()" [disabled]="items.length < 2">
+        เปรียบเทียบ <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="cb-items" *ngIf="!collapsed">
+    <div class="cb-card" *ngFor="let p of items; trackBy: trackById">
+      <img class="cb-thumb" [appProductImage]="p" [alt]="p.productName" width="64" height="64" />
+      <div class="cb-info">
+        <span class="cb-name" [title]="p.productName">{{ p.productName }}</span>
+        <span class="cb-price">฿{{ priceOf(p) | number }}</span>
+      </div>
+      <!-- อยู่ในมุมการ์ด (ไม่ล้นออกนอก) จึงไม่ถูกตัดขอบ; พื้นที่กด 32px -->
+      <button class="cb-remove" type="button" (click)="remove(p.id)" [attr.aria-label]="'เอา ' + p.productName + ' ออกจากการเปรียบเทียบ'"
+        title="เอาออกจากการเปรียบเทียบ">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <div class="cb-hint" *ngIf="items.length < 2">เลือกอย่างน้อย 2 ชิ้นเพื่อเปรียบเทียบ</div>
+  </div>
+</section>
+</ng-container>
+</ng-container>

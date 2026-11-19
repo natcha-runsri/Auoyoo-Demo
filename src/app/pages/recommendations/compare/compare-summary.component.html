@@ -1,0 +1,61 @@
+<section class="summary" aria-labelledby="ai-summary-title" [attr.aria-busy]="state === 'loading'">
+  <header class="head">
+    <app-ai-avatar></app-ai-avatar>
+    <h2 id="ai-summary-title" class="title">สรุปโดย AI</h2>
+    <button *ngIf="state === 'ok'" type="button" class="again" (click)="reanalyze.emit()"
+      [title]="canReanalyze ? 'ให้ AI วิเคราะห์สินค้าชุดนี้ใหม่' : 'เข้าสู่ระบบเพื่อวิเคราะห์ใหม่'">
+      <span class="material-symbols-outlined" aria-hidden="true">refresh</span>วิเคราะห์ใหม่
+    </button>
+  </header>
+
+  <!-- กำลังวิเคราะห์ -->
+  <div *ngIf="state === 'loading'" class="loading" role="status">
+    <p class="loading-text">AI กำลังวิเคราะห์...</p>
+    <div class="skeleton" aria-hidden="true">
+      <span class="sk w90"></span><span class="sk w75"></span><span class="sk w60"></span>
+      <div class="sk-cols"><span class="sk-box"></span><span class="sk-box"></span></div>
+    </div>
+  </div>
+
+  <!-- ไม่สำเร็จ (ตารางด้านล่างยังใช้ได้) -->
+  <div *ngIf="state === 'error'" class="failed" role="alert">
+    <p>วิเคราะห์ไม่สำเร็จ</p>
+    <button type="button" class="retry" (click)="retry.emit()">ลองใหม่</button>
+  </div>
+
+  <ng-container *ngIf="state === 'ok' && analysis as a">
+    <p *ngIf="!a.sameKind" class="kind-note">
+      <span class="material-symbols-outlined" aria-hidden="true">info</span>
+      สินค้าต่างประเภทกัน จึงเปรียบเทียบกันตรง ๆ ไม่ได้ — สรุปแยกทีละชิ้น
+    </p>
+    <p class="overview">{{ a.overview }}</p>
+
+    <div class="products" [style.--cols]="a.products.length">
+      <article *ngFor="let p of a.products" class="product" [class.recommended]="a.recommendation?.id === p.id">
+        <h3 class="pname">{{ nameOf(p.id) }}</h3>
+        <ul class="points">
+          <li *ngFor="let s of p.strengths" class="good">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            <span><span class="visually-hidden">จุดเด่น: </span>{{ s }}</span>
+          </li>
+          <li *ngFor="let c of p.caveats" class="warn">
+            <span class="material-symbols-outlined" aria-hidden="true">error</span>
+            <span><span class="visually-hidden">ข้อควรรู้: </span>{{ c }}</span>
+          </li>
+        </ul>
+        <p class="fit"><strong>เหมาะกับ:</strong> {{ p.suitedFor }}</p>
+      </article>
+    </div>
+
+    <div *ngIf="a.recommendation as r" class="pick">
+      <p class="pick-title"><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>AI แนะนำ: {{ nameOf(r.id) }}</p>
+      <p class="pick-reason">{{ r.reason }}</p>
+      <ul *ngIf="a.scenarios.length" class="cases">
+        <li *ngFor="let s of a.scenarios">{{ s.condition }} <span class="arrow" aria-hidden="true">→</span>
+          <span class="visually-hidden"> ให้เลือก </span><strong>{{ nameOf(s.productId) }}</strong></li>
+      </ul>
+    </div>
+
+    <p class="foot">ผลวิเคราะห์โดย AI จากข้อมูลสินค้า ณ วันที่ {{ asOf | thaiDate }} อาจคลาดเคลื่อนได้</p>
+  </ng-container>
+</section>

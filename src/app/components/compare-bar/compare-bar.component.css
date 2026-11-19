@@ -1,0 +1,104 @@
+:host { display: block; }
+
+.compare-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: min(1040px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 14px 18px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+}
+.compare-bar.collapsed { width: auto; padding: 8px 14px; }
+
+.cb-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.cb-toggle {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 0; background: none;
+  color: #1e3a8a; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.cb-arrow { font-size: 22px; }
+.cb-count { color: #6b7280; font-size: 13px; font-weight: 600; }
+.cb-icon { display: none; font-size: 20px; }
+
+.cb-header-actions { display: flex; align-items: center; gap: 10px; }
+.cb-clear, .cb-compare {
+  min-height: 40px; padding: 0 20px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.cb-clear { border: 1px solid #c9ced8; background: #fff; color: #374151; }
+@media (hover: hover) { .cb-clear:hover { background: #f3f4f6; } }
+.cb-compare { border: 1px solid #1e3a8a; background: #1e3a8a; color: #fff; }
+@media (hover: hover) { .cb-compare:hover:not(:disabled) { filter: brightness(1.15); } }
+.cb-compare:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.cb-items { display: flex; gap: 12px; margin-top: 12px; padding-bottom: 4px; overflow-x: auto; }
+.cb-card {
+  position: relative; flex: 0 0 auto; display: flex; align-items: center; gap: 10px; width: 250px;
+  box-sizing: border-box; padding: 10px 34px 10px 10px; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb;
+}
+.cb-thumb { flex: 0 0 auto; width: 64px; height: 64px; border-radius: 8px; background: #fff; object-fit: contain; }
+.cb-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cb-name {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 13.5px; line-height: 1.35; color: #111827;
+}
+.cb-price { font-size: 15px; font-weight: 700; color: #1e3a8a; }
+
+/* ปุ่ม X อยู่ในมุมขวาบนของการ์ด: พื้นที่กด 32px วงแดง 22px */
+.cb-remove {
+  position: absolute; top: 2px; right: 2px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+}
+.cb-remove .material-symbols-outlined {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: #dc2626; color: #fff; font-size: 16px; font-weight: 700;
+}
+@media (hover: hover) { .cb-remove:hover .material-symbols-outlined { background: #b91c1c; } }
+
+.cb-hint { align-self: center; padding: 0 8px; font-size: 13px; color: #9ca3af; white-space: nowrap; }
+
+.cb-toggle:focus-visible, .cb-clear:focus-visible, .cb-compare:focus-visible, .cb-remove:focus-visible {
+  outline: 2px solid #5b8fd6; outline-offset: 2px;
+}
+
+/* หน้าแชท AI: เหนือช่องพิมพ์ (bottom ตั้งจาก component) กว้างเท่าช่องพิมพ์; แบบย่อเป็นแถบเตี้ยบรรทัดเดียว */
+.compare-bar.docked { width: calc((100vw - 2 * var(--page-gutter)) * 0.85); }
+.compare-bar.docked.collapsed { width: auto; max-width: calc(100vw - 32px); padding: 6px 8px 6px 14px; }
+.compare-bar.docked.collapsed .cb-header { flex-wrap: nowrap; }
+.compare-bar.docked.collapsed .cb-header-actions { flex: none; }
+.compare-bar.docked.collapsed .cb-compare { min-height: 34px; padding: 0 16px; white-space: nowrap; }
+
+/* ที่ว่างท้ายหน้าเท่ากับความสูงแถบ + ระยะลอย */
+.cb-spacer { margin-bottom: 16px; }
+
+/* มือถือ: แถบเตี้ยลง การ์ดเลื่อนแนวนอน ปุ่มยังกดง่าย */
+@media (max-width: 767px) {
+  .compare-bar { bottom: 8px; width: calc(100vw - 16px); padding: 10px 12px 12px; border-radius: 14px; }
+  .cb-header { flex-wrap: nowrap; }
+  .cb-toggle { flex: 0 0 auto; font-size: 15px; }
+  /* หัวแถบบรรทัดเดียว: คำว่า "เปรียบเทียบ" เป็นไอคอน (screen reader ยังอ่านคำได้) */
+  .cb-icon { display: inline; }
+  .cb-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .cb-header-actions { gap: 6px; }
+  .compare-bar.docked { width: calc(100vw - 16px); }
+  .cb-clear, .cb-compare { min-height: 36px; padding: 0 12px; font-size: 13px; }
+  .cb-items { gap: 8px; margin-top: 8px; }
+  .cb-card { width: 210px; padding: 8px 32px 8px 8px; gap: 8px; }
+  .cb-thumb { width: 52px; height: 52px; }
+  .cb-name { font-size: 12.5px; }
+  .cb-price { font-size: 14px; }
+  .cb-hint { white-space: normal; max-width: 140px; }
+  .cb-spacer { margin-bottom: 8px; }
+}
+
+/* จอสัมผัส: ปุ่มกดอย่างน้อย 44px (X บนการ์ด: ขยายพื้นที่กดที่มองไม่เห็น) — ความสูงแถบวัดใหม่เอง ช่องพิมพ์แชทเลื่อนตาม */
+@media (max-width: 1023px) {
+  .cb-toggle { min-height: 44px; }
+  .cb-clear, .cb-compare, .compare-bar.docked.collapsed .cb-compare { min-height: 44px; }
+  .cb-remove::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+}

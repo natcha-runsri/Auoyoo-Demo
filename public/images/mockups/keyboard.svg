@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: คีย์บอร์ด">
+  <!-- AuoYoo product mockup (keyboard) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="90" y="134" width="220" height="100" rx="14"/>
+      <path d="M116 162 H122 M142 162 H148 M168 162 H174 M194 162 H200 M220 162 H226 M246 162 H252 M272 162 H278"/>
+      <path d="M128 188 H134 M154 188 H160 M180 188 H186 M206 188 H212 M232 188 H238 M258 188 H264"/>
+      <path d="M150 212 H250"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">คีย์บอร์ด</text>
+</svg>

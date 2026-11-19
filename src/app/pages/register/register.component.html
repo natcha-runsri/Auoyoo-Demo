@@ -1,0 +1,78 @@
+<!-- <form (ngSubmit)> + ปุ่ม type="submit" = กด Enter ในช่องใดก็ได้ส่งฟอร์มเหมือนกด Register
+     novalidate: ปิด tooltip validation ของ browser ใช้ข้อความภาษาไทยของเราเองแทน -->
+<form class="register-form" [formGroup]="form" (ngSubmit)="onRegister()" (input)="clearServerError()" novalidate>
+  <h1 id="register-title">Welcome to<br />AuoYoo!</h1>
+
+  <label for="register-email">Email</label>
+  <input #field id="register-email" type="email" formControlName="email" autocomplete="email"
+    autocapitalize="off" spellcheck="false" inputmode="email"
+    [class.input-error]="showError('email')"
+    [attr.aria-invalid]="showError('email')" aria-describedby="register-email-error" />
+  <p id="register-email-error" class="field-error" [class.visible]="showError('email')">
+    {{ showError('email') ? fieldError('email') : ' ' }}
+  </p>
+
+  <label for="register-username">Username</label>
+  <input #field id="register-username" type="text" formControlName="username" autocomplete="username"
+    autocapitalize="off" spellcheck="false"
+    [class.input-error]="showError('username')"
+    [attr.aria-invalid]="showError('username')" aria-describedby="register-username-error" />
+  <p id="register-username-error" class="field-error" [class.visible]="showError('username')">
+    {{ showError('username') ? fieldError('username') : ' ' }}
+  </p>
+
+  <label for="register-password">Password</label>
+  <div class="password-field">
+    <input #field id="register-password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+      autocomplete="new-password" (focus)="passwordFocused = true" (blur)="passwordFocused = false"
+      [class.input-error]="showError('password')"
+      [attr.aria-invalid]="showError('password')" aria-describedby="register-password-error register-password-rules" />
+    <button type="button" class="toggle-password" (click)="togglePassword()" (mousedown)="$event.preventDefault()"
+      [attr.aria-label]="showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'" [attr.aria-pressed]="showPassword"
+      aria-controls="register-password">
+      <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+    </button>
+
+    <!-- checklist กฎรหัสผ่าน: กล่องลอยใต้ช่อง แสดงเฉพาะตอน focus (ไม่ดันช่องอื่นลง)
+         อยู่ใน DOM ตลอดเพื่อให้ screen reader อ่านผ่าน aria-describedby ได้ -->
+    <ul id="register-password-rules" class="password-rules" [class.open]="passwordFocused" aria-label="เงื่อนไขรหัสผ่าน">
+      <li *ngFor="let rule of passwordRules" [class.met]="ruleMet(rule)">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ ruleMet(rule) ? 'check_circle' : 'radio_button_unchecked' }}</span>
+        <span>{{ rule.label }}</span>
+        <span class="visually-hidden">{{ ruleMet(rule) ? '(ผ่านแล้ว)' : '(ยังไม่ผ่าน)' }}</span>
+      </li>
+    </ul>
+  </div>
+  <p id="register-password-error" class="field-error" [class.visible]="showError('password')">
+    {{ showError('password') ? fieldError('password') : ' ' }}
+  </p>
+
+  <label for="register-confirmPassword">Confirm Password</label>
+  <div class="password-field">
+    <input #field id="register-confirmPassword" [type]="showConfirm ? 'text' : 'password'" formControlName="confirmPassword"
+      autocomplete="new-password"
+      [class.input-error]="showError('confirmPassword')"
+      [attr.aria-invalid]="showError('confirmPassword')" aria-describedby="register-confirmPassword-error" />
+    <button type="button" class="toggle-password" (click)="toggleConfirm()" (mousedown)="$event.preventDefault()"
+      [attr.aria-label]="showConfirm ? 'ซ่อนรหัสผ่านยืนยัน' : 'แสดงรหัสผ่านยืนยัน'" [attr.aria-pressed]="showConfirm"
+      aria-controls="register-confirmPassword">
+      <span class="material-symbols-outlined" aria-hidden="true">{{ showConfirm ? 'visibility_off' : 'visibility' }}</span>
+    </button>
+  </div>
+  <p id="register-confirmPassword-error" class="field-error" [class.visible]="showError('confirmPassword')">
+    {{ showError('confirmPassword') ? fieldError('confirmPassword') : ' ' }}
+  </p>
+
+  <label class="remember" for="register-remember">
+    <input id="register-remember" type="checkbox" formControlName="rememberMe" /> Remember me
+  </label>
+
+  <p class="error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <button type="submit" class="register-submit" [disabled]="loading" [attr.aria-busy]="loading">
+    <span class="spinner" *ngIf="loading" aria-hidden="true"></span>
+    {{ loading ? 'กำลังสมัครสมาชิก...' : 'Register' }}
+  </button>
+
+  <button type="button" class="back-link" (mousedown)="$event.preventDefault()" (click)="onBackToLogin()">Back to Login</button>
+</form>

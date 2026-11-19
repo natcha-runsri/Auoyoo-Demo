@@ -1,0 +1,34 @@
+<div class="auth-modal-overlay" *ngIf="view" [class.closing]="closing" (click)="close()">
+  <!-- ลืมรหัสผ่านใช้กรอบอีกแบบ (ขาวทึบ ขอบกรมท่า ปุ่ม X สีฟ้า) ตามดีไซน์
+       popup หน้าโปรไฟล์ (แก้ไขอีเมล/เปลี่ยนรหัสผ่าน) ใช้กรอบฟ้าอ่อน (--soft) -->
+  <div class="auth-modal-box" [class.auth-modal-box--plain]="view === 'forgot'" [class.auth-modal-box--soft]="softBox" [class.closing]="closing" role="dialog" aria-modal="true"
+    [attr.aria-labelledby]="labelledBy" (click)="$event.stopPropagation()">
+    <div class="auth-modal-close-bar">
+      <button type="button" class="auth-modal-close" (mousedown)="$event.preventDefault()" (click)="close()" aria-label="ปิด">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <p class="auth-modal-reason" *ngIf="reason">{{ reason }}</p>
+
+    <!-- แต่ละ *ngSwitchCase คือ div แยกกัน -> re-mount ทุกครั้งที่สลับ view -> เล่น fade ของ .auth-modal-view เอง
+         (ตัว .auth-modal-overlay/.auth-modal-box ข้างนอกไม่ถูกแตะเลย ไม่กะพริบ/ไม่ replay enter animation) -->
+    <div [ngSwitch]="view">
+      <div *ngSwitchCase="'login'" class="auth-modal-view">
+        <app-login (loginSuccess)="onLoginSuccess()"></app-login>
+      </div>
+      <div *ngSwitchCase="'register'" class="auth-modal-view">
+        <app-register (registerSuccess)="onRegisterSuccess()"></app-register>
+      </div>
+      <div *ngSwitchCase="'forgot'" class="auth-modal-view">
+        <app-forgot-password-modal></app-forgot-password-modal>
+      </div>
+      <div *ngSwitchCase="'email-change'" class="auth-modal-view">
+        <app-email-change-modal></app-email-change-modal>
+      </div>
+      <div *ngSwitchCase="'password-change'" class="auth-modal-view">
+        <app-password-change-modal></app-password-change-modal>
+      </div>
+    </div>
+  </div>
+</div>

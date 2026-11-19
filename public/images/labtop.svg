@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-label="โน้ตบุ๊ก">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe8fb"/><stop offset="1" stop-color="#b9cbf3"/></linearGradient></defs>
+  <rect width="1080" height="1080" fill="url(#g)"/>
+  <circle cx="918" cy="162" r="378" fill="#fff" opacity=".18"/>
+  <circle cx="108" cy="972" r="270" fill="#fff" opacity=".14"/>
+  <g transform="translate(270.0 270.0) scale(5.400)"><rect x="18" y="22" width="64" height="42" rx="4" fill="none" stroke="#1c316f" stroke-width="5"/>
+    <rect x="25" y="29" width="50" height="28" rx="2" fill="#1c316f" opacity=".18"/>
+    <path d="M8 70h84l-6 8H14z" fill="#1c316f"/></g>
+  <text x="1031" y="1031" text-anchor="end" font-family="sans-serif" font-size="49" fill="#1c316f" opacity=".55">ภาพประกอบเดโม</text>
+</svg>

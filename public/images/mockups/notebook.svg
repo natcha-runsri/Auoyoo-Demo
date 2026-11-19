@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: โน้ตบุ๊ก">
+  <!-- AuoYoo product mockup (notebook) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="128" y="112" width="144" height="94" rx="8"/>
+      <path d="M104 226 H296 L282 248 H118 Z"/>
+      <path d="M182 237 H218"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">โน้ตบุ๊ก</text>
+</svg>

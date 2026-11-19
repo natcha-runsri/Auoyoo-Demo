@@ -1,0 +1,56 @@
+<ul class="groups">
+  <li *ngFor="let root of categories; let gi = index; trackBy: trackByName" class="group-item">
+    <ng-container *ngIf="singleLeaf(root) as leaf; else multi">
+      <!-- กลุ่มที่มีหมวดเดียว: แคปซูลคือหมวดนั้น -->
+      <button type="button" class="capsule" [class.selected]="isSelected(leaf)" (click)="onGroupClick(root)"
+        [attr.aria-current]="isSelected(leaf) ? 'page' : null" [attr.aria-expanded]="isSelected(leaf) ? isExpanded(root) : null">
+        <span class="material-symbols-outlined icon" aria-hidden="true">{{ root.icon || iconOf(leaf) }}</span>
+        <span class="label">{{ root.name }}</span>
+        <span class="material-symbols-outlined chevron" aria-hidden="true">{{ isSelected(leaf) && isExpanded(root) ? 'expand_more' : 'chevron_right' }}</span>
+      </button>
+      <ng-container *ngIf="isSelected(leaf) && isExpanded(root)">
+        <ng-container *ngTemplateOutlet="brandList"></ng-container>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #multi>
+      <button type="button" class="capsule" [class.all-selected]="isAllSelected(root)" (click)="onGroupClick(root)"
+        [attr.aria-expanded]="isExpanded(root)" [attr.aria-controls]="'cat-group-' + gi"
+        [attr.aria-current]="isAllSelected(root) ? 'page' : null">
+        <span class="material-symbols-outlined icon" aria-hidden="true">{{ iconOf(root, 'grid_view') }}</span>
+        <span class="label">{{ root.name }}</span>
+        <span class="material-symbols-outlined chevron" aria-hidden="true">{{ isExpanded(root) ? 'expand_more' : 'chevron_right' }}</span>
+      </button>
+
+      <ul *ngIf="isExpanded(root)" class="tree" [id]="'cat-group-' + gi">
+        <li *ngFor="let node of root.children; trackBy: trackByName" class="tree-item">
+          <button type="button" class="leaf" [class.selected]="isSelected(node)" (click)="onLeafClick(node)"
+            [attr.aria-current]="isSelected(node) ? 'page' : null">
+            <span class="material-symbols-outlined icon" aria-hidden="true">{{ iconOf(node) }}</span>
+            <span class="label">{{ node.name }}</span>
+            <span *ngIf="isSelected(node)" class="material-symbols-outlined chevron" aria-hidden="true">expand_more</span>
+          </button>
+          <ng-container *ngIf="isSelected(node)">
+            <ng-container *ngTemplateOutlet="brandList"></ng-container>
+          </ng-container>
+        </li>
+      </ul>
+    </ng-template>
+  </li>
+</ul>
+
+<!-- แบรนด์ของหมวดที่เลือก -->
+<ng-template #brandList>
+  <fieldset class="brands">
+    <legend class="visually-hidden">กรองตามแบรนด์</legend>
+    <p *ngIf="brandsLoading && !brands.length" class="brands-note" role="status">กำลังโหลดแบรนด์...</p>
+    <label *ngFor="let b of visibleBrands" class="brand">
+      <input type="checkbox" [checked]="isBrandChecked(b.brand)" [value]="brandValue(b.brand)" (change)="onBrandChange(b.brand, $event)" />
+      <span class="box" aria-hidden="true"></span>
+      <span class="brand-name">{{ brandLabel(b.brand) }}</span>
+    </label>
+    <button *ngIf="hasMoreBrands" type="button" class="more" (click)="showAllBrands = !showAllBrands" [attr.aria-expanded]="showAllBrands">
+      {{ showAllBrands ? 'ดูน้อยลง' : 'ดูเพิ่มเติม (' + (brands.length - visibleBrands.length) + ')' }}
+    </button>
+  </fieldset>
+</ng-template>

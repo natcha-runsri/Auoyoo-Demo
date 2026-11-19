@@ -1,0 +1,11 @@
+<div class="otp" role="group" [attr.aria-labelledby]="labelledBy" [class.otp-invalid]="invalid">
+  <input #box *ngFor="let digit of digits; let i = index; trackBy: trackIndex"
+    class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*"
+    [id]="idPrefix + '-' + i"
+    [attr.autocomplete]="i === 0 ? 'one-time-code' : 'off'"
+    [attr.aria-label]="'หลักที่ ' + (i + 1)"
+    [attr.aria-invalid]="invalid"
+    [value]="digit" [disabled]="disabled"
+    (focus)="onFocus($event)" (input)="onInput(i, $event)"
+    (keydown)="onKeydown(i, $event)" (paste)="onPaste(i, $event)" />
+</div>

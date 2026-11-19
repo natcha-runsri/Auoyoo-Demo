@@ -1,0 +1,43 @@
+<!-- โซนอันตราย (ล่างสุดของหน้าโปรไฟล์) -->
+<section class="danger-zone" aria-labelledby="danger-zone-title">
+  <h2 id="danger-zone-title" class="danger-title">ลบบัญชี</h2>
+  <p class="danger-desc">
+    ลบบัญชีและข้อมูลทั้งหมดของคุณออกจากระบบถาวร ได้แก่ ข้อมูลบัญชี ประวัติการใช้งาน บทสนทนากับ AI รายการโปรด
+    การเชื่อมต่อกับ Google และรูปโปรไฟล์ — ย้อนกลับไม่ได้
+  </p>
+  <button type="button" class="danger-btn" (click)="openDialog()">
+    <span class="material-symbols-outlined" aria-hidden="true">delete_forever</span>ลบบัญชี
+  </button>
+</section>
+
+<app-confirm-dialog *ngIf="open" variant="cream" dialogRole="alertdialog" icon="delete_forever" title="ลบบัญชีถาวร?"
+  message="บัญชีของคุณพร้อมข้อมูลทั้งหมด (ข้อมูลบัญชี ประวัติการใช้งาน บทสนทนากับ AI รายการโปรด การเชื่อมต่อกับ Google และรูปโปรไฟล์) จะถูกลบถาวรทันที และกู้คืนไม่ได้"
+  confirmLabel="ลบบัญชีถาวร" busyLabel="กำลังลบบัญชี..." initialFocus="content"
+  [busy]="deleting" [error]="error" [confirmDisabled]="!canDelete"
+  (confirmed)="confirmDelete()" (cancelled)="cancel()">
+  <div class="fields">
+    <label class="field-label" for="delete-confirm-word">พิมพ์คำว่า <strong>{{ confirmWord }}</strong> เพื่อยืนยัน</label>
+    <input id="delete-confirm-word" class="field-input" type="text" autocomplete="off" spellcheck="false"
+      [value]="typed" (input)="typed = $any($event.target).value" (keydown.enter)="submitOnEnter($event)" [disabled]="deleting" />
+
+    <ng-container *ngIf="hasPassword; else codeFields">
+      <label class="field-label" for="delete-password">รหัสผ่านปัจจุบัน</label>
+      <input id="delete-password" class="field-input" type="password" autocomplete="current-password"
+        [value]="password" (input)="password = $any($event.target).value" (keydown.enter)="submitOnEnter($event)"
+        [disabled]="deleting" />
+    </ng-container>
+
+    <!-- บัญชี Google ที่ไม่มีรหัสผ่าน: ยืนยันด้วยรหัส 6 หลักทางอีเมล -->
+    <ng-template #codeFields>
+      <p class="field-hint">บัญชีนี้ไม่มีรหัสผ่าน ยืนยันด้วยรหัสที่ส่งไปที่ <strong class="email">{{ email }}</strong></p>
+      <button type="button" class="send-code" (click)="sendCode()" [disabled]="sendingCode || countdown.seconds > 0 || deleting">
+        {{ sendingCode ? 'กำลังส่งรหัส...' : countdown.seconds ? countdown.label : (codeSentTo ? 'ส่งรหัสอีกครั้ง' : 'ส่งรหัสยืนยันทางอีเมล') }}
+      </button>
+      <p class="field-hint sent" *ngIf="codeSentTo" role="status">ส่งรหัสไปที่ {{ codeSentTo }} แล้ว (หมดอายุใน 5 นาที)</p>
+      <label class="field-label" for="delete-code">รหัสยืนยัน 6 หลัก</label>
+      <input id="delete-code" class="field-input code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+        [value]="code" (input)="onCodeInput($event)" (keydown.enter)="submitOnEnter($event)"
+        [disabled]="deleting" />
+    </ng-template>
+  </div>
+</app-confirm-dialog>

@@ -1,0 +1,41 @@
+<section class="ask" aria-labelledby="ask-title">
+  <div class="head">
+    <app-ai-avatar></app-ai-avatar>
+    <h2 id="ask-title" class="title">ถาม AI เพิ่มเติม</h2>
+  </div>
+
+  <div class="chips" role="group" aria-label="คำถามแนะนำ">
+    <button *ngFor="let s of suggestions" type="button" class="chip" [disabled]="loading" (click)="suggest(s)">{{ s }}</button>
+  </div>
+
+  <div class="composer" [class.disabled]="quotaOut">
+    <label class="visually-hidden" for="compare-ask-input">ถามเพิ่มเกี่ยวกับสินค้าชุดนี้</label>
+    <textarea #box id="compare-ask-input" rows="2" [value]="input" [attr.maxlength]="maxLength" [disabled]="loading || quotaOut"
+      placeholder="ถามเพิ่มเกี่ยวกับสินค้าชุดนี้ เช่น ตัวไหนเหมาะกับตัดต่อวิดีโอ"
+      (input)="onInput($event)" (keydown)="onKeydown($event)"></textarea>
+    <button type="button" class="send" [disabled]="!canSend" (click)="submit()" aria-label="ส่งคำถาม" title="ส่ง (Enter)">
+      <span class="material-symbols-outlined" aria-hidden="true">send</span>
+    </button>
+  </div>
+
+  <p class="quota" *ngIf="!isLoggedIn && !quotaOut">
+    เหลือ <strong [class.low]="guestRemaining <= 1">{{ guestRemaining }}</strong> จาก {{ guestQuotaMax }} ครั้ง ·
+    <button type="button" class="link" (click)="login.emit()">เข้าสู่ระบบ</button>เพื่อใช้งานไม่จำกัด
+  </p>
+  <p class="quota out" *ngIf="quotaOut" role="alert">
+    ใช้ครบ {{ guestQuotaMax }} ครั้งแล้ว <button type="button" class="link" (click)="login.emit()">เข้าสู่ระบบ</button>เพื่อใช้งานต่อ
+  </p>
+
+  <div class="messages" *ngIf="messages.length || loading" aria-live="polite" aria-label="คำถามและคำตอบเกี่ยวกับสินค้าชุดนี้">
+    <div *ngFor="let m of messages" class="msg" [class.user]="m.role === 'user'">
+      <app-ai-avatar *ngIf="m.role === 'bot'"></app-ai-avatar>
+      <p class="bubble" [class.error]="m.error"><span class="visually-hidden">{{ m.role === 'user' ? 'คุณ: ' : 'AI: ' }}</span>{{ m.text }}</p>
+    </div>
+    <div class="msg" *ngIf="loading">
+      <app-ai-avatar></app-ai-avatar>
+      <p class="bubble typing" role="status"><span class="visually-hidden">AI กำลังพิมพ์คำตอบ</span>
+        <span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+      </p>
+    </div>
+  </div>
+</section>

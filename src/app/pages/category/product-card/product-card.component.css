@@ -1,0 +1,143 @@
+:host {
+  --pc-navy: #3d4a8c;
+  --pc-navy-dark: #1f2f4d;
+  --pc-cream: #f5e6a8;
+  display: block;
+  min-width: 0;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 0 2px;
+  border-radius: 20px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* กรอบรูป: พื้นเทาอ่อน ขอบโค้งมาก รูปอยู่กลางไม่ยืด */
+.media {
+  position: relative;
+  aspect-ratio: 1 / 0.9;
+  border-radius: 22px;
+  background: #efefef;
+  overflow: hidden;
+  transition: box-shadow 0.18s ease;
+}
+.image {
+  position: absolute;
+  inset: 12% 10% 6%;
+  width: 80%;
+  height: 82%;
+  object-fit: contain;
+}
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  max-width: calc(100% - 24px);
+  padding: 3px 12px;
+  box-sizing: border-box;
+  border: 1.5px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+  margin: 12px 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--pc-navy);
+}
+
+.price-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
+.price-block { display: flex; flex-direction: column; min-width: 0; }
+.price-label, .price { font-weight: 700; color: #111; line-height: 1.3; }
+.price-label { font-size: 13.5px; }
+.price { font-size: 15px; font-variant-numeric: tabular-nums; }
+
+.actions { display: flex; gap: 8px; flex: 0 0 auto; }
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--pc-navy);
+  color: var(--pc-cream);
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.15s;
+}
+.icon-btn .material-symbols-outlined { font-size: 21px; font-variation-settings: 'FILL' 0, 'wght' 400; }
+/* เลือกแล้ว: ไอคอนทึบ + วงขอบครีม (โทนเดิม) */
+.icon-btn.active { background: var(--pc-navy-dark); border-color: var(--pc-cream); }
+.icon-btn.active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 500; }
+.icon-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.detail-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  min-height: 36px;
+  border: 1.5px solid var(--pc-navy-dark);
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+/* hover เฉพาะอุปกรณ์ที่ชี้ได้ (มือถือแตะแล้วไม่ค้างสถานะ hover) */
+@media (hover: hover) {
+  .card:hover { transform: translateY(-3px); }
+  .card:hover .media { box-shadow: 0 10px 22px rgba(31, 47, 77, 0.12); }
+  .icon-btn:hover:not(:disabled) { filter: brightness(1.15); transform: scale(1.05); }
+  .detail-btn:hover { background: #f3f5fb; }
+}
+
+.icon-btn:focus-visible, .detail-btn:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+
+/* จอสัมผัส: พื้นที่กดอย่างน้อย 44px — วงกลมยังขนาดเดิม ขยายเฉพาะพื้นที่กดที่มองไม่เห็น (::before) */
+@media (max-width: 1023px) {
+  .icon-btn { position: relative; }
+  .icon-btn::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; }
+  .detail-btn { min-height: 44px; }
+}
+
+/* การ์ดกะทัดรัด (มือถือ 2 คอลัมน์) */
+@media (max-width: 479px) {
+  .media { border-radius: 16px; }
+  .badge { top: 8px; right: 8px; padding: 2px 8px; font-size: 11px; }
+  .name { margin-top: 8px; font-size: 13px; }
+  .price-label { font-size: 11.5px; }
+  .price { font-size: 13.5px; }
+  .actions { gap: 8px; }
+  .icon-btn { width: 36px; height: 36px; }
+  .icon-btn::before { inset: -6px; }
+  .icon-btn .material-symbols-outlined { font-size: 19px; }
+  .detail-btn { font-size: 12.5px; border-radius: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .media, .icon-btn { transition: none; }
+  .card:hover { transform: none; }
+}

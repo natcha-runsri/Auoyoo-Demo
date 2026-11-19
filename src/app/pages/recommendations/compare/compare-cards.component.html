@@ -1,0 +1,20 @@
+<ul class="cards" [style.--cols]="table.products.length" aria-label="สินค้าที่เปรียบเทียบ">
+  <li *ngFor="let p of table.products; let i = index; trackBy: trackById" class="card" [class.recommended]="isRecommended(p)">
+    <span *ngIf="isRecommended(p)" class="ai-badge">
+      <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>AI แนะนำ
+    </span>
+    <button type="button" class="remove" (click)="remove.emit(p.product.id)"
+      [attr.aria-label]="'เอา ' + p.product.productName + ' ออกจากการเปรียบเทียบ'" title="เอาออกจากการเปรียบเทียบ">
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+    <div class="thumb">
+      <img [appProductImage]="p.product" [alt]="p.product.productName" width="160" height="160" loading="lazy" />
+    </div>
+    <h2 class="name" [title]="p.product.productName">{{ p.product.productName }}</h2>
+    <ul class="tags" *ngIf="tags(p).length">
+      <li *ngFor="let t of tags(p)" class="tag" [class.tag-price]="t === 'ราคาถูกสุด'">{{ t }}</li>
+    </ul>
+    <p class="price">{{ priceOf(i) ?? 'ไม่มีข้อมูลราคา' }}</p>
+    <a class="detail" [routerLink]="['/products', p.product.id]">ดูรายละเอียด</a>
+  </li>
+</ul>

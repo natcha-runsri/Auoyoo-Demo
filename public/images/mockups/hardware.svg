@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: ฮาร์ดแวร์คอมพิวเตอร์">
+  <!-- AuoYoo product mockup (hardware) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="144" y="124" width="112" height="112" rx="12"/>
+      <rect x="172" y="152" width="56" height="56" rx="6"/>
+      <path d="M166 124 V104 M200 124 V104 M234 124 V104 M166 236 V256 M200 236 V256 M234 236 V256"/>
+      <path d="M144 146 H124 M144 180 H124 M144 214 H124 M256 146 H276 M256 180 H276 M256 214 H276"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">ฮาร์ดแวร์คอมพิวเตอร์</text>
+</svg>

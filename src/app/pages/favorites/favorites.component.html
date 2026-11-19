@@ -1,0 +1,97 @@
+<!-- ===== แถบหัวหน้า ===== -->
+<header class="fav-hero">
+  <div class="fav-hero-inner">
+    <div>
+      <nav class="crumbs" aria-label="breadcrumb">
+        <a routerLink="/">หน้าหลัก</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">รายการโปรด</span>
+      </nav>
+      <h1 class="fav-title" aria-live="polite">
+        <ng-container *ngIf="isLoggedIn; else plainTitle">คุณบันทึกไว้ {{ count$ | async }} รายการ</ng-container>
+        <ng-template #plainTitle>รายการโปรด</ng-template>
+      </h1>
+    </div>
+    <!-- ถุงช้อปปิ้งมีหัวใจตรงกลาง (เส้นสีเหลืองครีม) -->
+    <svg class="fav-hero-icon" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M17 17v-4a7 7 0 0 1 14 0v4" />
+      <path d="M10.5 17h27a2 2 0 0 1 2 2.1l-1.6 20.4A3.2 3.2 0 0 1 34.7 42.5H13.3a3.2 3.2 0 0 1-3.2-3L8.5 19.1a2 2 0 0 1 2-2.1z" />
+      <path d="M24 35.5s-6-3.7-6-8a3.4 3.4 0 0 1 6-2.2 3.4 3.4 0 0 1 6 2.2c0 4.3-6 8-6 8z" />
+    </svg>
+  </div>
+</header>
+
+<section class="fav-page">
+  <!-- ยังไม่ล็อกอิน (พฤติกรรมเดิม) -->
+  <div class="state" *ngIf="!isLoggedIn">
+    <p>เข้าสู่ระบบเพื่อดูและจัดการรายการโปรดของคุณ</p>
+    <button type="button" class="state-btn" (click)="promptLogin()">เข้าสู่ระบบ</button>
+  </div>
+
+  <ng-container *ngIf="isLoggedIn">
+    <!-- ===== แท็บหมวด + เรียงลำดับ ===== -->
+    <div class="toolbar">
+      <div class="fav-tabs" *ngIf="(tabs$ | async) as tabs" aria-label="กรองตามหมวดหมู่" role="group">
+        <button *ngFor="let tab of tabs" type="button" class="fav-tab" [class.active]="tab === (activeTab$ | async)"
+          [attr.aria-pressed]="tab === (activeTab$ | async)" (click)="selectTab(tab)">
+          {{ tabLabel(tab) }}
+        </button>
+      </div>
+
+      <div class="sort">
+        <button #sortButton type="button" class="sort-btn" (click)="toggleSort()" (keydown)="onSortButtonKeydown($event)"
+          aria-haspopup="menu" [attr.aria-expanded]="sortOpen" aria-controls="fav-sort-menu"
+          [attr.aria-label]="'เรียงตาม: ' + sortOption.label">
+          <span class="material-symbols-outlined" aria-hidden="true">swap_vert</span>
+          <span class="sort-text" aria-hidden="true">เรียงตาม:
+            <ng-container *ngIf="sortOption.from; else plainSort">{{ sortOption.from }}
+              <span class="material-symbols-outlined arrow">arrow_forward</span> {{ sortOption.to }}</ng-container>
+            <ng-template #plainSort>{{ sortOption.label }}</ng-template>
+          </span>
+        </button>
+        <ul *ngIf="sortOpen" id="fav-sort-menu" class="sort-menu" role="menu" aria-label="เรียงลำดับ">
+          <li *ngFor="let o of sortOptions; let i = index" role="presentation">
+            <button #sortItem type="button" role="menuitemradio" class="sort-item" tabindex="-1"
+              [class.active]="o.value === sort" [attr.aria-checked]="o.value === sort" [attr.aria-label]="o.label"
+              (click)="chooseSort(o.value)" (keydown)="onSortMenuKeydown($event, i)">
+              <ng-container *ngIf="o.from; else plainItem">{{ o.from }}
+                <span class="material-symbols-outlined arrow" aria-hidden="true">arrow_forward</span> {{ o.to }}</ng-container>
+              <ng-template #plainItem>{{ o.label }}</ng-template>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== การ์ด ===== -->
+    <ng-container *ngIf="{ items: visible$ | async, loading: loading$ | async } as s">
+      <div class="grid" *ngIf="s.loading && !s.items?.length" aria-busy="true" role="status" aria-label="กำลังโหลดรายการโปรด">
+        <div class="skeleton" *ngFor="let i of skeletons">
+          <div class="sk-frame"></div><div class="sk-line"></div><div class="sk-line short"></div>
+          <div class="sk-chips"><span></span><span></span><span></span></div><div class="sk-bottom"></div>
+        </div>
+      </div>
+
+      <div class="grid" *ngIf="s.items?.length">
+        <app-favorite-card *ngFor="let p of s.items; trackBy: trackById" [product]="p" [now]="now"
+          [leaving]="isLeaving(p.id)" (remove)="remove($event)"></app-favorite-card>
+      </div>
+
+      <div class="state" *ngIf="!s.loading && !s.items?.length">
+        <svg class="state-icon" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M17 17v-4a7 7 0 0 1 14 0v4" />
+          <path d="M10.5 17h27a2 2 0 0 1 2 2.1l-1.6 20.4A3.2 3.2 0 0 1 34.7 42.5H13.3a3.2 3.2 0 0 1-3.2-3L8.5 19.1a2 2 0 0 1 2-2.1z" />
+          <path d="M24 35.5s-6-3.7-6-8a3.4 3.4 0 0 1 6-2.2 3.4 3.4 0 0 1 6 2.2c0 4.3-6 8-6 8z" />
+        </svg>
+        <p>ยังไม่มีสินค้าในรายการโปรด</p>
+        <a routerLink="/category" class="state-btn">ไปดูสินค้า</a>
+      </div>
+    </ng-container>
+  </ng-container>
+</section>
+
+<!-- ===== แถบเลิกทำ ===== -->
+<div class="snackbar" *ngIf="undo" role="status">
+  <span>ลบออกจากรายการโปรดแล้ว</span>
+  <button type="button" class="undo-btn" (click)="undoRemove()">เลิกทำ</button>
+</div>

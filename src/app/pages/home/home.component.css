@@ -1,0 +1,368 @@
+/* ทุก section ใช้ขอบซ้ายขวา --page-gutter เดียวกับ navbar (src/styles.css) ขอบเนื้อหาจึงตรงแนวเดียวกันทั้งหน้า */
+
+/* Main (hero) */
+.main {
+  padding: 20px var(--page-gutter) 0;
+}
+
+/* สูงตามความกว้างจอ (มือถือ ~180px, 1366px ≈ 510px เท่าเดิม, จอใหญ่สุด 640px) — object-fit: cover ครอปแทนการยืด */
+.main img {
+  width: 100%;
+  height: clamp(180px, 37vw, 640px);
+  border-radius: 16px;
+  display: block;
+  object-fit: cover;
+}
+
+/* Categories — แถวเดียวเลื่อนแนวนอน (ปัดนิ้ว / ลูกศร) ไม่มีเลื่อนอัตโนมัติ */
+.categories-section {
+  padding: 0 var(--page-gutter);
+}
+
+.categories-carousel {
+  position: relative;
+  container-type: inline-size; /* 100cqi = ความกว้างเนื้อหา section (ใช้คิดความกว้างการ์ด) */
+}
+
+/* แถวยืดชนขอบจอ (margin ติดลบเท่า gutter) แล้วใส่ padding คืน: การ์ดแรกตรงแนวแบนเนอร์/หัวข้อ,
+   เลื่อนแล้วการ์ดวิ่งถึงขอบจอ และมีระยะเว้นหลังการ์ดใบสุดท้าย — ตัวแถวเองไม่กว้างเกินจอ หน้าจึงไม่เลื่อนข้าง */
+.categories-row {
+  --cat-gap: 10px;
+  --cat-per-view: 2.5; /* มือถือ: เห็น 2 ใบครึ่ง */
+  display: flex;
+  gap: var(--cat-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-inline: var(--page-gutter);
+  margin: 0 calc(-1 * var(--page-gutter));
+  padding: 4px var(--page-gutter);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categories-row::-webkit-scrollbar {
+  display: none;
+}
+
+.section-title {
+  text-align: left;
+  color: var(--navy);
+  font-size: 26px;
+  font-weight: 700;
+  margin: 25px 0 18px;
+}
+
+/* ความกว้างการ์ดคิดจาก --cat-per-view (ไม่ผูกกับจำนวนหมวด — เพิ่มหมวดใหม่แล้วต่อท้ายแถวเอง)
+   พื้นที่ที่เห็น = 100cqi + gutter ขวา (การ์ดเลื่อนถึงขอบจอ) หักช่องว่างระหว่างการ์ดที่เห็นเต็มใบ
+   flex-grow: 1 = ถ้าการ์ดทั้งหมดพอดีจอ ให้ยืดเต็มแถวแบบเดิม; ล้นจอเมื่อไหร่ก็เลื่อนแทน
+   การ์ดทุกใบสูงเท่ากันจาก align-items: stretch ของแถว (ชื่อ 2 บรรทัดก็สูงเท่าใบอื่น) */
+.category-card {
+  flex: 1 0 calc((100cqi + var(--page-gutter) - (var(--cat-per-view) - 0.5) * var(--cat-gap)) / var(--cat-per-view));
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  background-color: #EAEDF5;
+  border-radius: 20px;
+  padding: 14px 8px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-card:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: -3px;
+}
+
+.category-circle {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-name {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #182B60;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ลูกศรลอยทับขอบซ้าย/ขวาของแถว กึ่งกลางแนวตั้ง — มือถือ gutter แคบ จึงดันเข้ามาให้เหลือขอบจอ 4px */
+.cat-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 2px 8px rgba(12, 30, 60, 0.18);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease, visibility 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cat-arrow-prev { left: max(-20px, calc(4px - var(--page-gutter))); }
+.cat-arrow-next { right: max(-20px, calc(4px - var(--page-gutter))); }
+
+.cat-arrow .material-symbols-outlined {
+  font-size: 26px;
+}
+
+@media (hover: hover) { .cat-arrow:hover { box-shadow: 0 4px 14px rgba(12, 30, 60, 0.28); } }
+
+.cat-arrow:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* visibility: hidden = ซ่อนจากทั้งตา, เมาส์ และปุ่ม Tab */
+.cat-arrow.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (min-width: 600px) {
+  .categories-row { --cat-gap: 14px; --cat-per-view: 3.5; }
+}
+
+@media (min-width: 768px) {
+  .categories-row { --cat-gap: 16px; --cat-per-view: 4.5; }
+  .category-card { gap: 16px; padding: 14px 10px; }
+  .category-name { font-size: 16px; }
+}
+
+@media (min-width: 1024px) {
+  .categories-row { --cat-per-view: 6; }
+}
+
+/* gadget */
+.gadget-section {
+  padding: 0 var(--page-gutter) 20px;
+}
+
+.title {
+  text-align: center;
+  color: var(--navy);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 28px 0 14px;
+}
+
+/* สัดส่วนตาม mockup: Laptops คอลัมน์ซ้ายสูง 2 แถว (~1/3), แถวบน Printer (กว้าง) + Keyboard,
+   แถวล่าง Headphone (แคบ) + Mouse (กว้าง) — ใช้ 4 track 3:3:1:3 ให้การ์ดแถวบน/ล่างเหลื่อมกันแบบในภาพ */
+.gadget-grid {
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr 3fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "laptop printer   printer keyboard"
+    "laptop headphone mouse   mouse";
+  gap: 10px;
+  /* สูงตามความกว้างจอ: 1366px ≈ 575px, 1920px = 780px */
+  height: clamp(460px, 42vw, 780px);
+}
+
+.gadget-card {
+  position: relative;
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+}
+
+.gadget-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.gadget-card:focus-visible img {
+  transform: scale(1.05);
+}
+@media (hover: hover) { .gadget-card:hover img { transform: scale(1.05); } }
+
+.gadget-card:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+.gadget-laptop    { grid-area: laptop; }
+.gadget-printer   { grid-area: printer; }
+.gadget-keyboard  { grid-area: keyboard; }
+.gadget-headphone { grid-area: headphone; }
+.gadget-mouse     { grid-area: mouse; }
+
+/* เมาส์อยู่ค่อนล่างของรูปแนวตั้ง — เลื่อนจุดครอปลงให้ตัวเมาส์อยู่กลางการ์ดแนวนอน */
+.gadget-mouse img { object-position: center 62%; }
+
+.gadget-label {
+  position: absolute;
+  z-index: 1;
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(20px, 1.8vw, 30px);
+  line-height: 1.1;
+  /* เงา 2 ชั้น อ่านออกทั้งบนพื้นสว่าง (Printer) และมืด (Mouse) */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.gadget-label.bottom-left {
+  left: 16px;
+  bottom: 14px;
+}
+
+.gadget-label.top-right {
+  right: 16px;
+  top: 12px;
+}
+
+/* Promo banner — กว้างชนขอบจอ ไม่มี gutter/ขอบโค้ง (ต่างจาก section อื่นโดยตั้งใจ) */
+.promo-banner {
+  position: relative;
+  margin: 20px 0 0;
+  overflow: hidden;
+  height: clamp(420px, 65vh, 640px);
+  height: clamp(420px, 65dvh, 640px);
+}
+
+.promo-slides {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.promo-slides img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* แถบเข้มโปร่งแสงแนวตั้งกลางแบนเนอร์ (~60% ความกว้าง) รองข้อความ — ด้านข้างเห็นรูปชัดตามปกติ */
+.promo-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  padding: 0 24px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(24, 24, 30, 0.5);
+  color: #fff;
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.promo-overlay h3 {
+  font-size: clamp(30px, 3.2vw, 50px);
+  font-weight: bold;
+  margin: 0 0 12px;
+}
+
+.promo-overlay p {
+  margin: 2px 0;
+  font-size: clamp(15px, 1.25vw, 20px);
+}
+
+.promo-dots {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dot.active {
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .categories-row { scroll-behavior: auto; }
+  .gadget-card img { transition: none; }
+  .gadget-card:hover img { transform: none; }
+}
+
+.footer {
+  height: 20px;
+  background: var(--navy);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  /* มือถือ: 2 คอลัมน์ — Laptops เต็มแถวบน แล้ว Printer/Keyboard, Headphone/Mouse แถวละ 2 */
+  .gadget-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "laptop    laptop"
+      "printer   keyboard"
+      "headphone mouse";
+    grid-template-rows: 210px 170px 170px;
+    gap: 8px;
+    height: auto;
+  }
+  .gadget-label {
+    font-size: 19px;
+  }
+  .gadget-label.bottom-left { left: 12px; bottom: 10px; }
+  .gadget-label.top-right { right: 12px; top: 10px; }
+  .promo-banner {
+    height: 320px;
+  }
+  .promo-overlay {
+    width: 92%;
+    padding: 0 16px 34px;
+  }
+  .promo-overlay h3 {
+    font-size: 26px;
+  }
+  .promo-overlay p {
+    font-size: 14px;
+  }
+}

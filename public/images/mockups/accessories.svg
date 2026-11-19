@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="ภาพตัวอย่าง: อุปกรณ์เสริม">
+  <!-- AuoYoo product mockup (accessories) — ใช้แทนรูปสินค้าเมื่อรูปจากร้านค้าโหลดไม่ได้หรือปิดรูปจากร้านค้าไว้ -->
+  <rect width="400" height="400" fill="#FFF8EC"/>
+  <circle cx="200" cy="180" r="118" fill="#F3E6CF"/>
+  <g fill="#FFF8EC" stroke="#1C316F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="160" y="104" width="80" height="78" rx="12"/>
+      <path d="M182 104 V84 M218 104 V84"/>
+      <path fill="none" d="M200 182 V206 C200 240 150 236 150 262"/>
+      <rect x="132" y="262" width="36" height="12" rx="4"/>
+  </g>
+  <text x="200" y="344" text-anchor="middle" font-family="'Noto Sans Thai','Leelawadee UI',Tahoma,sans-serif" font-size="22" font-weight="600" fill="#7A869A">อุปกรณ์เสริม</text>
+</svg>

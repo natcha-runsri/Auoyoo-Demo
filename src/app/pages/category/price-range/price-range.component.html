@@ -1,0 +1,26 @@
+<div class="range" [class.disabled]="disabled">
+  <div class="slider">
+    <div class="track" aria-hidden="true"></div>
+    <div class="fill" aria-hidden="true" [style.left.%]="minPercent" [style.width.%]="maxPercent - minPercent"></div>
+    <input type="range" class="thumb thumb-min" [min]="floor" [max]="ceiling" [step]="step" [value]="minPrice"
+      [disabled]="disabled" aria-label="ราคาต่ำสุด" [attr.aria-valuetext]="label(minPrice)"
+      (input)="onMinSlide($event)" (change)="commitNow()" />
+    <input type="range" class="thumb thumb-max" [min]="floor" [max]="ceiling" [step]="step" [value]="maxPrice"
+      [disabled]="disabled" aria-label="ราคาสูงสุด" [attr.aria-valuetext]="label(maxPrice)"
+      (input)="onMaxSlide($event)" (change)="commitNow()" />
+  </div>
+
+  <div class="inputs">
+    <label class="field">
+      <span class="visually-hidden">ราคาต่ำสุด (บาท)</span>
+      <input type="text" inputmode="numeric" placeholder="ราคาต่ำสุด" [value]="minText" [disabled]="disabled"
+        (input)="onMinTyped($event)" (blur)="commitNow()" (keyup.enter)="commitNow()" />
+    </label>
+    <span class="dash" aria-hidden="true">–</span>
+    <label class="field">
+      <span class="visually-hidden">ราคาสูงสุด (บาท)</span>
+      <input type="text" inputmode="numeric" placeholder="ราคาสูงสุด" [value]="maxText" [disabled]="disabled"
+        (input)="onMaxTyped($event)" (blur)="commitNow()" (keyup.enter)="commitNow()" />
+    </label>
+  </div>
+</div>

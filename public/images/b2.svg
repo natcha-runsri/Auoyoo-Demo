@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="796" viewBox="0 0 1200 796" role="img" aria-label="จอและลำโพง">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe8fb"/><stop offset="1" stop-color="#b9cbf3"/></linearGradient></defs>
+  <rect width="1200" height="796" fill="url(#g)"/>
+  <circle cx="1020" cy="119" r="279" fill="#fff" opacity=".18"/>
+  <circle cx="120" cy="716" r="199" fill="#fff" opacity=".14"/>
+  <g transform="translate(223.9 230.8) scale(3.343)"><rect x="10" y="16" width="80" height="52" rx="5" fill="none" stroke="#1c316f" stroke-width="5"/>
+    <rect x="17" y="23" width="66" height="38" rx="2" fill="#1c316f" opacity=".18"/>
+    <path d="M42 68h16l4 12H38z" fill="#1c316f"/><rect x="30" y="80" width="40" height="5" rx="2.5" fill="#1c316f"/></g><g transform="translate(641.8 230.8) scale(3.343)"><rect x="26" y="12" width="48" height="76" rx="8" fill="none" stroke="#1c316f" stroke-width="5"/>
+    <circle cx="50" cy="60" r="14" fill="none" stroke="#1c316f" stroke-width="5"/><circle cx="50" cy="30" r="6" fill="#1c316f"/></g>
+  <text x="1164" y="760" text-anchor="end" font-family="sans-serif" font-size="36" fill="#1c316f" opacity=".55">ภาพประกอบเดโม</text>
+</svg>

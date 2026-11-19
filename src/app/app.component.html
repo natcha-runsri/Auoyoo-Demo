@@ -1,0 +1,62 @@
+<div class="page">
+
+  <!-- Header -->
+  <!-- ติดบนจอตอนเลื่อน (sticky) — มีเงาเมื่อเลื่อนลงจากบนสุดแล้ว (class scrolled ตั้งใน AppComponent) -->
+  <header #siteHeader class="header">
+
+    <!-- โลโก้ = ลิงก์กลับหน้าหลัก (อยู่หน้าหลักแล้ว -> เลื่อนขึ้นบนสุด ดู onLogoClick) -->
+    <a class="logo" routerLink="/" aria-label="กลับหน้าหลัก Auoyoo" (click)="onLogoClick()">
+      <img src="images/logo.png" alt="โลโก้ AuoYoo" width="70" height="70" />
+    </a>
+
+    <nav class="nav" aria-label="เมนูหลัก">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">หน้าหลัก</a>
+      <a routerLink="/category" routerLinkActive="active" class="nav-link">หมวดหมู่</a>
+      <a routerLink="/recommendations" routerLinkActive="active" class="nav-link">แนะนำ</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="search-box" role="search">
+        <input type="text" placeholder="ค้นหาเพื่อคำแนะนำที่ดีที่สุด" #searchInput aria-label="ค้นหาเพื่อคำแนะนำที่ดีที่สุด"
+          (keyup.enter)="onSearch(searchInput)" />
+        <button class="search-btn" type="button" aria-label="ค้นหา" (click)="onSearch(searchInput)">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+      </div>
+
+      <button class="icon-btn fav-btn" aria-label="รายการโปรด" routerLink="/favorites">
+        <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+        <span class="fav-label">รายการโปรด</span>
+        <span class="fav-badge" *ngIf="(favoriteCount$ | async) as favCount">{{ favCount }}</span>
+      </button>
+
+      <app-user-menu></app-user-menu>
+
+      <!-- จอเล็กกว่า 1024px: ปุ่มเมนู ☰ เปิดแผงเมนูด้านข้าง (จอใหญ่ซ่อน — ใช้ .nav ด้านบน) -->
+      <button #menuButton type="button" class="menu-btn" (click)="menuOpen = true" aria-label="เปิดเมนู"
+        aria-controls="site-drawer" [attr.aria-expanded]="menuOpen">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ข้อความแจ้งชั่วคราว เช่น "ลบบัญชีเรียบร้อยแล้ว" (FlashMessageService) -->
+  <app-flash-message></app-flash-message>
+
+  <!-- แผงเมนูด้านข้าง (มือถือ/แท็บเล็ต) — เปิดจากปุ่ม ☰ ด้านบน ปิดเองแล้วคืนโฟกัสให้ปุ่มนั้น -->
+  <app-drawer-menu [(open)]="menuOpen" [returnFocusTo]="menuButton"></app-drawer-menu>
+
+  <!-- Routed pages render here -->
+  <router-outlet></router-outlet>
+
+  <!-- แถบเปรียบเทียบแบบลอย แสดงทุกหน้า (ซ่อนเองเมื่อไม่มีสินค้าใน list) -->
+  <app-compare-bar></app-compare-bar>
+
+  <!-- footer ทุกหน้า: ข้อความโปรเจกต์การศึกษา/ลิขสิทธิ์ร้านค้าต้นทาง/อีเมลติดต่อ -->
+  <app-site-footer></app-site-footer>
+
+  <!-- Host เดียวของ Login/Register/Forgot-password/Reset-password modal ทั้งระบบ
+       (ทุกที่ที่อยากเปิด modal พวกนี้ เรียกผ่าน AuthModalService เท่านั้น ไม่มีใครสร้าง overlay เองอีก) -->
+  <app-auth-modal-host></app-auth-modal-host>
+
+</div>

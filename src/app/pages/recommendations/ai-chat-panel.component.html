@@ -1,0 +1,92 @@
+<!-- ไล่สีของไอคอนประกายดาว (ใช้ร่วมทุกรูปประจำตัว AI) -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ai-spark-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3fc" />
+      <stop offset="1" stop-color="#a78bfa" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- กล่องแชท: สูงตามข้อความ (ยังไม่เริ่ม = สูงพอดีจอ) เลื่อนทั้งหน้า -->
+<div class="panel" [class.started]="started">
+  <div class="toolbar" *ngIf="started">
+    <button type="button" class="new-chat" [disabled]="loading" (click)="newChat.emit()">
+      <span class="material-symbols-outlined" aria-hidden="true">add_comment</span>เริ่มแชทใหม่
+    </button>
+  </div>
+
+  <div class="log">
+    <!-- ===== ยังไม่เริ่มแชท ===== -->
+    <div class="welcome" *ngIf="!started">
+      <div class="logo-frame"><img src="images/logo.png" alt="AuoYoo" width="72" height="72" /></div>
+      <h2 class="welcome-title">คุณกำลังหาอุปกรณ์ที่ใช่อยู่หรอ??</h2>
+      <p class="welcome-text">สวัสดีครับ วันนี้คุณอยากได้อุปกรณ์แบบไหน บอกมาได้เลย เราจะแนะนำอุปกรณ์ที่ตรงใจที่สุดให้ครับ</p>
+      <button type="button" class="auto-btn" [disabled]="loading || quotaOut" (click)="auto.emit()">
+        <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>แนะนำอัตโนมัติ
+      </button>
+    </div>
+
+    <!-- ===== บทสนทนา ===== -->
+    <div class="messages" *ngIf="started" aria-live="polite" aria-label="บทสนทนากับ AI แนะนำสินค้า">
+      <div *ngFor="let m of messages; trackBy: trackByIndex" class="msg" [class.user]="m.role === 'user'">
+        <ng-container *ngIf="m.role === 'user'; else botAvatar">
+          <img class="avatar" [src]="avatarFailed ? 'images/default-avatar.svg' : userAvatar" alt="" width="38" height="38"
+            (error)="avatarFailed = true" />
+        </ng-container>
+        <div class="content">
+          <p *ngIf="m.text" class="bubble"><span class="visually-hidden">{{ m.role === 'user' ? 'คุณ: ' : 'AI: ' }}</span>{{ m.text }}</p>
+          <div class="products" *ngIf="m.products?.length" role="group" aria-label="สินค้าที่แนะนำ">
+            <app-product-card *ngFor="let p of m.products" [product]="p"></app-product-card>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg" *ngIf="loading">
+        <ng-container *ngTemplateOutlet="botAvatar"></ng-container>
+        <div class="content">
+          <p class="bubble typing" role="status"><span class="visually-hidden">AI กำลังพิมพ์คำตอบ</span>
+            <span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== แถบกรมท่าท้ายจอ + ช่องพิมพ์ (ล็อกกับจอ) — ข้อความเลื่อนผ่านใต้ช่องพิมพ์ ===== -->
+<div class="dock">
+  <div class="band" aria-hidden="true"></div>
+
+  <div #wrap class="composer-wrap">
+    <button *ngIf="showJumpToLatest" type="button" class="jump" (click)="jumpToLatest()"
+      aria-label="ไปข้อความล่าสุด" title="ไปข้อความล่าสุด">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+    </button>
+
+    <div class="composer" [class.disabled]="quotaOut">
+      <label class="visually-hidden" for="ai-chat-input">พิมพ์บอกความต้องการ</label>
+      <textarea #box id="ai-chat-input" [rows]="compactInput ? 1 : 2" [value]="input" [attr.maxlength]="maxLength"
+        [disabled]="loading || quotaOut" [placeholder]="compactInput ? placeholderCompact : placeholder"
+        (input)="onInput($event)" (keydown)="onKeydown($event)"></textarea>
+      <button type="button" class="send" [disabled]="!canSend" (click)="submit()" aria-label="ส่งข้อความ" title="ส่ง (Enter)">
+        <span class="material-symbols-outlined" aria-hidden="true">send</span>
+      </button>
+    </div>
+
+    <p class="quota" *ngIf="!isLoggedIn && !quotaOut">
+      เหลือ <strong [class.low]="guestRemaining <= 1">{{ guestRemaining }}</strong> จาก {{ guestQuotaMax }} ครั้ง ·
+      <button type="button" class="link" (click)="login.emit()">เข้าสู่ระบบ</button>เพื่อใช้งานไม่จำกัด
+    </p>
+    <p class="quota out" *ngIf="quotaOut" role="alert">
+      ใช้ครบ {{ guestQuotaMax }} ครั้งแล้ว <button type="button" class="link" (click)="login.emit()">เข้าสู่ระบบ</button>เพื่อใช้งานต่อ
+    </p>
+  </div>
+</div>
+
+<ng-template #botAvatar>
+  <span class="avatar bot" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path fill="url(#ai-spark-gradient)"
+      d="M12 2.5c.5 4.6 2.4 6.5 7 7-4.6.5-6.5 2.4-7 7-.5-4.6-2.4-6.5-7-7 4.6-.5 6.5-2.4 7-7z" /></svg>
+  </span>
+</ng-template>

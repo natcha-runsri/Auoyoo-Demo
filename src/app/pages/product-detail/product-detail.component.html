@@ -1,0 +1,62 @@
+<!-- แถบหัวสีกรมท่า (แบบเดียวกับหน้าประวัติ/รายการโปรด): breadcrumb + ชื่อหมวดภาษาไทย + ไอคอนหมวด -->
+<header class="pd-hero">
+  <div class="pd-hero-inner">
+    <div>
+      <nav class="crumbs" aria-label="breadcrumb">
+        <a [routerLink]="heading.slug ? ['/category', heading.slug] : ['/category']">หมวดหมู่</a>
+        <span aria-hidden="true">/</span><span aria-current="page">รายละเอียด</span>
+      </nav>
+      <!-- h1 ของหน้าเป็นชื่อสินค้า (SEO) — หัวข้อหมวดเป็นป้ายหัวหน้า -->
+      <p class="pd-hero-title">{{ heading.name }}</p>
+    </div>
+    <span class="material-symbols-outlined pd-hero-icon" aria-hidden="true">{{ heading.icon }}</span>
+  </div>
+</header>
+
+<section class="pd-page">
+  <p *ngIf="loading" class="pd-note">กำลังโหลด...</p>
+  <p *ngIf="error" class="pd-error">{{ error }}</p>
+
+  <div class="pd-body" *ngIf="product && !loading">
+    <img class="pd-image" [appProductImage]="product" [alt]="product.productName"
+      width="320" height="320" />
+    <div class="pd-info">
+      <span class="pd-badge">{{ product.category }}</span>
+      <h1 class="pd-name">{{ product.productName }}</h1>
+      <p class="pd-brand">แบรนด์: {{ brandText }}</p>
+      <p class="pd-spec" *ngIf="product.specification">{{ product.specification }}</p>
+      <p class="pd-price" [class.has-date]="!!product.priceAsOf">{{ price }}</p>
+      <p class="pd-price-date" *ngIf="product.priceAsOf">ราคา ณ วันที่ {{ product.priceAsOf | thaiDate }}</p>
+
+      <!-- รายการโปรด | เปรียบเทียบ (ระบบเดิมเดียวกับการ์ดสินค้า) -->
+      <div class="pd-actions">
+        <button type="button" class="pd-action pd-fav" *ngIf="{ on: (isFavorite$ | async) ?? false } as fav"
+          (click)="toggleFavorite()" [attr.aria-pressed]="fav.on"
+          [attr.aria-label]="fav.on ? 'เอาออกจากรายการโปรด' : 'เพิ่มในรายการโปรด'">
+          <span class="material-symbols-outlined" [class.filled]="fav.on" aria-hidden="true">favorite</span>
+          {{ fav.on ? 'อยู่ในรายการโปรด' : 'รายการโปรด' }}
+        </button>
+        <span class="pd-divider" aria-hidden="true"></span>
+        <ng-container *ngIf="{ on: (isInCompare$ | async) ?? false, full: (compareFull$ | async) ?? false } as cmp">
+          <!-- ปุ่มที่ disabled ไม่แสดง title เอง -> ใส่ tooltip ที่ตัวห่อ -->
+          <span class="pd-action-wrap" [attr.title]="cmp.full ? 'เปรียบเทียบได้สูงสุด ' + compareMax + ' รายการ' : null">
+            <button type="button" class="pd-action pd-compare" (click)="toggleCompare()" [disabled]="cmp.full"
+              [attr.aria-pressed]="cmp.on"
+              [attr.aria-label]="cmp.full ? 'เปรียบเทียบได้สูงสุด ' + compareMax + ' รายการ'
+                : cmp.on ? 'เอาออกจากรายการเปรียบเทียบ' : 'เพิ่มในรายการเปรียบเทียบ'">
+              <span class="material-symbols-outlined" aria-hidden="true">compare</span>
+              {{ cmp.on ? 'อยู่ในรายการเปรียบเทียบ' : 'เปรียบเทียบอุปกรณ์' }}
+            </button>
+          </span>
+        </ng-container>
+      </div>
+
+      <!-- เปิดหน้าร้านในแท็บใหม่ (rel=noopener: หน้าร้านเข้าถึงแท็บของเราไม่ได้) -->
+      <a class="pd-source-link" *ngIf="product.url" [href]="product.url" target="_blank" rel="noopener"
+        [attr.aria-label]="storeLabel + ' (เปิดในแท็บใหม่)'">
+        {{ storeLabel }}
+        <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+      </a>
+    </div>
+  </div>
+</section>

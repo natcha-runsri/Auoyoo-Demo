@@ -1,0 +1,285 @@
+:host {
+  --cream: #FFFCF5;
+  --navy: #0c1e3c;
+  --navy-light: #16305c;
+  --accent-blue: #2148c0;
+  --text-dark: #1c1c1c;
+  --text-muted: #6b6b6b;
+  --border: #e7e1d4;
+  display: block;
+  font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page {
+  /* เต็มความกว้างจอ — ขอบซ้ายขวาของแต่ละส่วนใช้ --page-gutter (src/styles.css) */
+  background: var(--cream);
+  min-height: 100vh;
+  min-height: 100dvh; /* มือถือ: ความสูงจอจริงเมื่อแถบเบราว์เซอร์ยืด/หด */
+}
+
+/* Header — ติดบนจอตอนเลื่อน (พื้นครีมทึบ) z-index ต่ำกว่า overlay/drawer/modal (900+) แต่สูงกว่าเนื้อหา */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 14px var(--page-gutter);
+  background: var(--cream);
+  transition: box-shadow 0.2s ease;
+}
+
+.header.scrolled { box-shadow: 0 2px 10px rgba(12, 30, 60, 0.12); }
+
+.logo {
+  display: flex;
+  width: 50;
+  height: 50;
+}
+
+/* .logo เป็นลิงก์กลับหน้าหลัก — ขนาด/ตำแหน่งเท่าเดิม เพิ่มแค่ hover/focus จาง ๆ */
+a.logo {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: opacity 0.2s ease;
+}
+
+a.logo:hover,
+a.logo:focus-visible {
+  opacity: 0.8;
+}
+
+a.logo:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.logo img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+  flex: 1;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  padding-bottom: 4px;
+}
+
+.nav-link.active {
+  color: var(--accent-blue);
+  border-bottom: 3px solid var(--accent-blue);
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #E8E9EE;
+  border-radius: 30px;
+  padding: 6px 8px 6px 16px;
+  min-width: 312px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: inherit;
+  flex: 1;
+  color: var(--text-dark);
+}
+
+.search-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+.icon-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #1C316F;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* ตัวเลขจำนวนรายการโปรดบนไอคอนหัวใจ (real-time) */
+.fav-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.material-symbols-outlined {
+  font-size: 30px;
+  color: #1C316F;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.login-text {
+  color: #FBD9A4;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.avatar-circle {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-circle .material-symbols-outlined {
+  font-size: 55px;
+  color: #1e2a5e;
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 32;
+}
+
+.login-wrapper {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  min-width: 200px;
+  z-index: 200;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-dark);
+  margin: 0 0 10px;
+}
+
+.user-dropdown hr {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 0 0 12px;
+}
+
+.dropdown-login-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #2e8b57;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dropdown-login-link .material-symbols-outlined {
+  font-size: 20px;
+  color: #2e8b57;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: transparent;
+}
+
+/* ปุ่มเมนู ☰ — ใช้เฉพาะจอเล็กกว่า 1024px (แผงเมนูอยู่ใน components/drawer-menu) */
+.menu-btn { display: none; }
+
+/* ===== จอเล็กกว่า 1024px (มือถือ/แท็บเล็ต — breakpoint กลางดู src/styles.css) =====
+   แถว 1: โลโก้ | หัวใจ (ตัวเลข) + รูปโปรไฟล์/ปุ่มเข้าสู่ระบบ + ☰   แถว 2: ช่องค้นหาเต็มความกว้าง
+   เมนูหน้าหลัก/หมวดหมู่/แนะนำ ย้ายไปอยู่ในแผงด้านข้าง */
+@media (max-width: 1023px) {
+  .header {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    grid-template-areas: "logo . fav user menu" "search search search search search";
+    align-items: center;
+    gap: 8px 6px;
+    padding: 8px var(--page-gutter) 12px;
+  }
+  .logo { grid-area: logo; width: auto; height: auto; }
+  .logo img { width: 52px; height: 52px; }
+  .nav { display: none; }
+  /* ลูกของ .header-actions เป็นช่องใน grid ของ header โดยตรง */
+  .header-actions { display: contents; }
+  .search-box { grid-area: search; min-width: 0; min-height: 44px; padding: 2px 4px 2px 16px; }
+  /* 16px: iPhone ไม่ซูมเองตอนแตะช่องค้นหา */
+  .search-box input { align-self: stretch; min-width: 0; width: 100%; min-height: 44px; font-size: 16px; }
+  .search-btn { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; }
+  .fav-btn { grid-area: fav; justify-content: center; width: 44px; height: 44px; padding: 0; }
+  .fav-btn .fav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .fav-badge { top: 0; right: -2px; }
+  app-user-menu { grid-area: user; }
+  .menu-btn {
+    grid-area: menu; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+    border: 0; border-radius: 12px; background: transparent; cursor: pointer;
+  }
+  .menu-btn:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+}

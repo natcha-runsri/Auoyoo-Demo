@@ -1,0 +1,48 @@
+/* หน้าแชท AI แนะนำ และหน้าเปรียบเทียบ (compare-page) เต็มความกว้าง — ระยะขอบอยู่ในแต่ละส่วนเอง */
+.rec-page { padding: 0; }
+
+.ai-hero { background: #1c316f; color: #fff; }
+.ai-hero-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px var(--page-gutter) 22px; }
+.crumbs { display: flex; gap: 6px; font-size: 12.5px; font-weight: 600; }
+.crumbs a { color: #fff; text-decoration: none; }
+@media (hover: hover) { .crumbs a:hover { text-decoration: underline; } }
+.crumbs a:focus-visible { outline: 2px solid #5b8fd6; outline-offset: 2px; }
+.ai-title { margin: 8px 0 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: #f5e6a8; }
+.ai-hero-icon {
+  width: clamp(40px, 3.6vw, 52px); height: auto; fill: none; stroke: #f5e6a8; stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* โหมดแชท: เต็มพื้นที่ใต้ navbar (หน้าทั้งหน้าสูงพอดีจอ ดู body.ai-chat-docked ใน styles.css)
+   แถบหัวหน้าอยู่กับที่ — เลื่อนเฉพาะรายการข้อความใน ai-chat-panel (ระยะขอบ/ช่องว่างอยู่ใน ai-chat-panel เอง
+   scrollbar จึงชิดขอบจอเหมือนเดิม) */
+.rec-page--chat { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+.ai-hero { flex-shrink: 0; }
+.ai-page { position: relative; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+
+/* แป้นพิมพ์มือถือเปิด (ai-chat-panel แจ้ง) -> พับแถบหัวหน้า ให้เห็นข้อความแชทมากขึ้น; ปิดแป้นพิมพ์แล้วกางกลับ
+   (max-height มากกว่าความสูงจริงของแถบเสมอ -> ตอนกางอยู่หน้าตาเท่าเดิม) */
+@media (max-width: 1023px) {
+  .rec-page--chat .ai-hero { max-height: 120px; overflow: hidden; transition: max-height 0.22s ease, opacity 0.18s ease; }
+  .rec-page--chat.kb-open .ai-hero {
+    max-height: 0; opacity: 0; visibility: hidden;
+    transition: max-height 0.22s ease, opacity 0.18s ease, visibility 0s linear 0.22s;
+  }
+}
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .rec-page--chat .ai-hero, .rec-page--chat.kb-open .ai-hero { transition: none; }
+}
+
+/* จอสัมผัส: ลิงก์ breadcrumb มีพื้นที่กดสูง 44px (ขยายแบบมองไม่เห็น ไม่เปลี่ยนหน้าตา) */
+@media (max-width: 1023px) {
+  .crumbs a { position: relative; }
+  .crumbs a::before { content: ''; position: absolute; inset: -13px -4px; }
+}
+
+/* มือถือ: แถบหัวกรมท่าเตี้ยลง หัวข้อเล็กลง; เนื้อหาเริ่มที่ระยะ --page-top เท่ากันทุกหน้า */
+@media (max-width: 767px) {
+  .ai-hero-inner { padding: 12px var(--page-gutter) 14px; }
+  .crumbs { font-size: 13px; }
+  .ai-title { margin-top: 4px; font-size: 20px; }
+  .ai-hero-icon { width: 32px; }
+}

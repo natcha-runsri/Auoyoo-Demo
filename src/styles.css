@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* ===== Breakpoint กลางของทั้งเว็บ (ใช้แค่ชุดนี้ทุกไฟล์) =====
+   CSS ใส่ตัวแปรใน @media ไม่ได้ จึงกำหนดเป็นค่าตายตัวชุดเดียวกันทุกไฟล์:
+     มือถือเล็ก  (max-width: 479px)
+     มือถือ      (max-width: 767px)
+     แท็บเล็ต    (max-width: 1023px)   — navbar แบบมือถือ (☰ + ช่องค้นหาแถว 2) อยู่ช่วงนี้
+     จอคอม       1024px ขึ้นไป (ออกแบบที่ 1366px) — ห้ามเปลี่ยนหน้าตาช่วงนี้
+   hover effect ให้อยู่ใน @media (hover: hover) — จอสัมผัสจะไม่ค้างสถานะ hover */
+body {
+  margin: 0; /* ตัด margin 8px ค่าเริ่มต้นของ browser — ขอบเนื้อหาคุมด้วย --page-gutter อย่างเดียว */
+  overflow-x: clip; /* ไม่มีการเลื่อนแนวนอนของทั้งหน้า (ส่วนที่กว้างเลื่อนในกรอบของตัวเอง) */
+  background: #fdfbf3;
+}
+
+/* ธีมสีของ Login/Register modal (และ modal อื่นที่จะใช้ธีมนี้ต่อในอนาคต) */
+:root {
+  /* ขอบซ้าย-ขวาของเนื้อหาทั้งเว็บ (navbar, hero, ทุก section, ทุกหน้า) — แก้ที่นี่ที่เดียว
+     มือถือ 16px -> จอใหญ่ค่อย ๆ เพิ่มจนสุด 48px (1366px ≈ 34px, 1920px = 48px) */
+  --page-gutter: clamp(16px, 2.5vw, 48px);
+  /* มือถือ: ระยะจากใต้ navbar/แถบหัวกรมท่าถึงเนื้อหา เท่ากันทุกหน้า (ใช้ในกฎ max-width: 767px ของแต่ละหน้า) */
+  --page-top: 16px;
+
+  --bg-modal: #FFF5E8;
+  --bg-modal-translucent: rgba(255, 245, 232, 0.9);
+  --border-modal: #5A4A42;
+  /* น้ำเงินกรมท่าเดียวกับปุ่ม "เข้าสู่ระบบ"/ปุ่มผู้ใช้ใน navbar */
+  --navy: #1C316F;
+  --title: var(--navy);
+  --label: #9A3F1E;
+  --line: #B4602F;
+  --btn: var(--navy);
+  --btn-text: #FFFFFF;
+  --link: #3F4C85;
+  --forgot: #8B1414;
+  --close-bg: #8B2222;
+  --error: #A61B1B;
+  --error-line: #D88A8A;
+}
+
+/* หน้าแชท AI (/recommendations) แบบแอปแชท: ทั้งหน้าสูงพอดีจอและไม่เลื่อน — เลื่อนเฉพาะรายการข้อความ (ai-chat-panel)
+   header / แถบหัวหน้า / ช่องพิมพ์จึงอยู่กับที่ และไม่มี footer โผล่มาแทรกใต้ช่องพิมพ์ (ai-chat-panel ใส่/ถอด class นี้เอง)
+   100dvh: ไม่กระโดดตอนแถบ address bar มือถือยุบ/โผล่ (100vh = fallback เบราว์เซอร์เก่า) */
+body.ai-chat-docked { overflow: hidden; }
+body.ai-chat-docked .page { display: flex; flex-direction: column; height: 100vh; height: 100dvh; min-height: 0; }
+body.ai-chat-docked .page > * { flex-shrink: 0; }
+body.ai-chat-docked .page > app-recommendations { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+body.ai-chat-docked app-site-footer { display: none; }
+
+/* header ติดบนจอ (AppComponent ตั้ง --site-header-h = ความสูงจริง) — เลื่อนไปยัง section ในหน้า (#id) ไม่ให้ header บัง */
+[id] { scroll-margin-top: calc(var(--site-header-h, 0px) + 8px); }
+
+/* แผงเมนูด้านข้างเปิด (AppComponent) -> หน้าข้างหลังไม่เลื่อน */
+body.drawer-open { overflow: hidden; }
+
+/* รูปทุกรูปไม่ล้นกรอบ (รูปที่กำหนดขนาด/object-fit เองใน component ยังเป็นแบบเดิม) */
+img { max-width: 100%; }

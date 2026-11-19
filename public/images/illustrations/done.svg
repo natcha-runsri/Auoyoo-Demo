@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="ซองจดหมายสีเหลืองพร้อมเครื่องหมายถูกสีเขียว">
+  <!-- ภาพชั่วคราว: รอไฟล์จริงจากผู้ออกแบบ (ดู frontend/src/app/config/illustrations.ts) -->
+  <rect width="240" height="240" fill="#fafbfc"/>
+  <path d="M24 92 L120 30 L216 92 V218 H24 Z" fill="#f29e1f"/>
+  <rect x="50" y="20" width="140" height="150" rx="4" fill="#eef1f2"/>
+  <circle cx="120" cy="80" r="42" fill="#16a085"/>
+  <circle cx="120" cy="80" r="30" fill="#2ec4a0"/>
+  <path d="M104 80 l11 11 l22 -24" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 92 L120 160 L216 92 V218 H24 Z" fill="#f1c41a"/>
+  <path d="M24 218 L120 148 L216 218 Z" fill="#f3d460"/>
+  <rect x="62" y="196" width="116" height="8" rx="4" fill="#f9e7a0"/>
+  <rect x="34" y="120" width="6" height="56" rx="3" fill="#f6dc7a"/><rect x="200" y="120" width="6" height="56" rx="3" fill="#f6dc7a"/>
+</svg>

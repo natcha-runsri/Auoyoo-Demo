@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="ซองจดหมายพร้อมเครื่องหมายถูก">
+  <!-- ภาพชั่วคราว: รอไฟล์จริงจากผู้ออกแบบ (ดู frontend/src/app/config/illustrations.ts) -->
+  <g fill="#cfe3fb"><rect x="22" y="110" width="58" height="10" rx="5"/><rect x="40" y="132" width="40" height="10" rx="5"/><rect x="56" y="154" width="24" height="10" rx="5"/></g>
+  <path d="M60 64 l14 -8 l0 16 z" fill="none" stroke="#2f80ed" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="72" cy="104" r="5" fill="#2f80ed"/><circle cx="246" cy="58" r="5" fill="#2f80ed"/>
+  <circle cx="262" cy="128" r="8" fill="none" stroke="#2f80ed" stroke-width="4"/>
+  <g stroke="#56aef5" stroke-width="5" stroke-linecap="round"><path d="M160 12 v14"/><path d="M134 20 l8 10"/><path d="M186 20 l-8 10"/></g>
+  <path d="M96 104 L160 60 L224 104 V214 H96 Z" fill="#eceff8"/>
+  <rect x="112" y="44" width="96" height="104" rx="6" fill="#4fb3f6"/>
+  <path d="M190 44 h18 v18 z" fill="#8fd0fb"/>
+  <path d="M138 96 l16 16 l30 -32" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 104 L160 160 L224 104 V214 H96 Z" fill="#f4f6fb"/>
+  <path d="M96 214 L160 158 L224 214 Z" fill="#e4e8f3"/>
+</svg>

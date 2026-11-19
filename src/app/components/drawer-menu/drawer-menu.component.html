@@ -1,0 +1,38 @@
+<!-- แผงเมนูด้านข้าง (มือถือ/แท็บเล็ต): ปิดด้วยปุ่ม X, คลิกนอกแผง, Esc และเมื่อเลือกเมนู -->
+<div class="drawer-backdrop" *ngIf="open" (click)="close()" aria-hidden="true"></div>
+<aside id="site-drawer" class="drawer" [class.open]="open" role="dialog" aria-modal="true" aria-label="เมนู"
+  [attr.aria-hidden]="!open" [attr.inert]="open ? null : ''">
+  <div class="drawer-head">
+    <img src="images/logo.png" alt="" width="48" height="48" />
+    <button #drawerClose type="button" class="drawer-close" (click)="close()" aria-label="ปิดเมนู">
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+  </div>
+  <nav class="drawer-nav" aria-label="เมนูหลัก">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="close()">
+      <span class="material-symbols-outlined" aria-hidden="true">home</span>หน้าหลัก</a>
+    <a routerLink="/category" routerLinkActive="active" (click)="close()">
+      <span class="material-symbols-outlined" aria-hidden="true">category</span>หมวดหมู่</a>
+    <a routerLink="/recommendations" routerLinkActive="active" (click)="close()">
+      <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>แนะนำ</a>
+  </nav>
+  <!-- เมนูบัญชี: route/ไอคอน/logout ชุดเดียวกับ dropdown ของ app-user-menu -->
+  <div class="drawer-account">
+    <ng-container *ngIf="loggedIn; else drawerLogin">
+      <a routerLink="/profile" routerLinkActive="active" aria-label="โปรไฟล์ผู้ใช้" (click)="close()">
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>โปรไฟล์ผู้ใช้</a>
+      <a routerLink="/history" routerLinkActive="active" aria-label="ประวัติการใช้งาน" (click)="close()">
+        <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>ประวัติการใช้งาน</a>
+      <button type="button" class="drawer-logout" aria-label="ออกจากระบบ" (click)="logout()">
+        <span class="material-symbols-outlined" aria-hidden="true">logout</span>ออกจากระบบ</button>
+    </ng-container>
+    <!-- /login เปิด login modal แล้วพากลับหน้าแรก — ไม่คืนโฟกัสให้ปุ่ม ☰ เพื่อไม่แย่งโฟกัสจาก modal -->
+    <ng-template #drawerLogin>
+      <a routerLink="/login" aria-label="เข้าสู่ระบบ" (click)="close(false)">
+        <span class="material-symbols-outlined" aria-hidden="true">login</span>เข้าสู่ระบบ</a>
+    </ng-template>
+  </div>
+</aside>
+
+<!-- อยู่นอก .drawer: แผงมี transform ซึ่งจะทำให้ position: fixed ของ popup อิงแผงแทนจอ -->
+<app-logout-confirm *ngIf="confirmingLogout" (closed)="onLogoutConfirmClosed()"></app-logout-confirm>

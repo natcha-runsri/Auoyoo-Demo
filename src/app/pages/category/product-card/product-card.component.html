@@ -1,0 +1,32 @@
+<article class="card" [attr.aria-labelledby]="'pc-name-' + product.id">
+  <div class="media">
+    <img class="image" [appProductImage]="product" [alt]="product.productName" width="300" height="300" loading="lazy" />
+    <span class="badge">{{ badge }}</span>
+  </div>
+
+  <h3 class="name" [id]="'pc-name-' + product.id" [title]="product.productName">{{ product.productName }}</h3>
+
+  <div class="price-row">
+    <div class="price-block">
+      <span class="price-label">ราคาเฉพาะออนไลน์</span>
+      <span class="price">{{ priceText }}</span>
+    </div>
+    <div class="actions">
+      <ng-container *ngIf="{ fav: isFavorite$ | async, cmp: isInCompare$ | async, cmpDisabled: compareDisabled$ | async } as s">
+        <button class="icon-btn" type="button" [class.active]="s.fav" [attr.aria-pressed]="!!s.fav"
+          [attr.aria-label]="s.fav ? 'ลบออกจากรายการโปรด: ' + product.productName : 'เพิ่มในรายการโปรด: ' + product.productName"
+          [title]="s.fav ? 'ลบออกจากรายการโปรด' : 'เพิ่มในรายการโปรด'" (click)="onToggleFavorite()">
+          <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span>
+        </button>
+        <button class="icon-btn" type="button" [class.active]="s.cmp" [attr.aria-pressed]="!!s.cmp" [disabled]="s.cmpDisabled"
+          [attr.aria-label]="s.cmp ? 'ลบออกจากรายการเปรียบเทียบ: ' + product.productName : 'เพิ่มในรายการเปรียบเทียบ: ' + product.productName"
+          [title]="s.cmpDisabled ? 'เปรียบเทียบได้สูงสุด ' + compareMax + ' ชิ้น' : s.cmp ? 'ลบออกจากรายการเปรียบเทียบ' : 'เพิ่มในรายการเปรียบเทียบ'"
+          (click)="onToggleCompare()">
+          <span class="material-symbols-outlined" aria-hidden="true">compare</span>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <a class="detail-btn" [routerLink]="['/products', product.id]">ดูรายละเอียด <span aria-hidden="true">→</span></a>
+</article>

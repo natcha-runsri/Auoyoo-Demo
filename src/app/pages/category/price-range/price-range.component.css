@@ -1,0 +1,89 @@
+:host { display: block; }
+
+.range.disabled { opacity: 0.55; }
+
+/* แถบเลื่อน 2 หัว: input range 2 ตัวซ้อนกัน รับคลิกเฉพาะที่หัวจับ */
+.slider { position: relative; height: 34px; margin: 4px 6px 6px; }
+.track, .fill { position: absolute; top: 12px; height: 4px; border-radius: 2px; }
+.track { left: 0; right: 0; background: #c9d3e3; }
+.fill { background: #8b1d1d; }
+
+.thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 34px;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.thumb::-webkit-slider-runnable-track { height: 34px; background: transparent; border: 0; }
+.thumb::-moz-range-track { height: 34px; background: transparent; border: 0; }
+
+/* หัวจับรูปสามเหลี่ยมใต้เส้น (ตามดีไซน์) */
+.thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 12px;
+  margin-top: 16px;
+  border: 0;
+  background: #8b1d1d;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  cursor: grab;
+  pointer-events: auto;
+}
+.thumb::-moz-range-thumb {
+  width: 14px;
+  height: 12px;
+  border: 0;
+  border-radius: 0;
+  background: #8b1d1d;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform: translateY(10px);
+  cursor: grab;
+  pointer-events: auto;
+}
+.thumb:focus-visible { outline: none; }
+.thumb:focus-visible::-webkit-slider-thumb { background: #1c316f; }
+.thumb:focus-visible::-moz-range-thumb { background: #1c316f; }
+
+.inputs { display: flex; align-items: center; gap: 6px; }
+.field { flex: 1; min-width: 0; }
+.field input {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid #b7bfcc;
+  border-radius: 999px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: #1f2937;
+  text-align: center;
+}
+.field input:focus { outline: none; border-color: #1c316f; box-shadow: 0 0 0 3px rgba(28, 49, 111, 0.15); }
+.dash { color: #6b7280; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0;
+}
+
+/* มือถือ/แท็บเล็ต: ช่องพิมพ์ 16px ขึ้นไป — iPhone ไม่ซูมหน้าเว็บตอนแตะช่องพิมพ์ */
+@media (max-width: 1023px) {
+  .field input { font-size: 16px; }
+}
+
+/* จอสัมผัส: แถบเลื่อนและช่องราคาสูง 44px, หัวจับใหญ่ขึ้นให้ลากด้วยนิ้วได้ */
+@media (max-width: 1023px) {
+  .slider { height: 44px; }
+  .track, .fill { top: 16px; }
+  .thumb { height: 44px; }
+  .thumb::-webkit-slider-runnable-track { height: 44px; }
+  .thumb::-moz-range-track { height: 44px; }
+  .thumb::-webkit-slider-thumb { width: 24px; height: 20px; margin-top: 20px; }
+  .thumb::-moz-range-thumb { width: 24px; height: 20px; transform: translateY(8px); }
+  .field input { height: 44px; }
+}

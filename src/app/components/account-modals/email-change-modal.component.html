@@ -1,0 +1,102 @@
+<!-- แต่ละขั้นเป็น <form> ของตัวเอง -> Enter = กดปุ่มหลักของขั้นนั้น
+     (ฟอร์มที่ไม่มี [formGroup] ใช้ (submit) + preventDefault เอง — ไม่มี directive ของ Angular มากัน ไม่งั้นหน้าโหลดใหม่)
+     ทุกช่องจองที่สำหรับ error 1 บรรทัดไว้ กล่องจึงไม่กระโดด / error ขึ้นหลังกดปุ่มเท่านั้น -->
+<div [ngSwitch]="step">
+
+  <!-- ===== ขั้น 0: ยืนยันตัวตนด้วยรหัสผ่านปัจจุบัน ===== -->
+  <form *ngSwitchCase="0" class="acc-step acc-center" [formGroup]="passwordForm" (ngSubmit)="submitPassword()" novalidate>
+    <img class="acc-illus" [src]="illustrations.verifyIdentity" alt="" width="190" height="143" />
+    <h2 id="email-change-title" class="acc-question">
+      {{ noPassword ? 'กรุณาตั้งรหัสผ่านก่อนเปลี่ยนอีเมล' : 'กรุณายืนยันตัวตนด้วยรหัสผ่านปัจจุบัน' }}
+    </h2>
+
+    <!-- สมัครด้วย Google และยังไม่มีรหัสผ่าน: ยืนยันตัวตนด้วยรหัสผ่านไม่ได้ -> ไปตั้งรหัสผ่านก่อน (ขั้นตอนเปลี่ยนรหัสผ่านเดิม) -->
+    <div class="acc-narrow" *ngIf="noPassword">
+      <p class="acc-desc acc-desc-center">บัญชีนี้เข้าสู่ระบบด้วย Google และยังไม่ได้ตั้งรหัสผ่าน ตั้งรหัสผ่านแล้วจึงเปลี่ยนอีเมลได้</p>
+      <button type="button" class="acc-submit" (click)="onSetPassword()">ตั้งรหัสผ่าน</button>
+    </div>
+
+    <div class="acc-narrow" *ngIf="!noPassword">
+      <label class="acc-label acc-label-red" for="ec-password">รหัสผ่าน</label>
+      <app-password-input inputId="ec-password" variant="outline" placeholder="ระบุรหัสผ่าน" autocomplete="current-password"
+        formControlName="password" [invalid]="!!passwordError" describedBy="ec-password-error"></app-password-input>
+      <div class="acc-row">
+        <p id="ec-password-error" class="acc-error" [class.visible]="!!passwordError" role="alert">{{ passwordError || ' ' }}</p>
+        <button type="button" class="acc-forgot" (mousedown)="$event.preventDefault()" (click)="onForgot()">ลืมรหัสผ่าน?</button>
+      </div>
+
+      <button type="submit" class="acc-submit" [disabled]="loading" [attr.aria-busy]="loading">
+        <span class="acc-spinner" *ngIf="loading" aria-hidden="true"></span>
+        {{ loading ? 'กำลังตรวจสอบ...' : 'ยืนยัน' }}
+      </button>
+    </div>
+  </form>
+
+  <!-- ===== ขั้น 1: อีเมลใหม่ ===== -->
+  <form *ngSwitchCase="1" class="acc-step" [formGroup]="emailForm" (ngSubmit)="submitEmail()" novalidate>
+    <app-stepper class="acc-stepper" [steps]="stepNames" [current]="stepperIndex" label="ขั้นตอนการแก้ไขอีเมล"></app-stepper>
+    <div class="acc-content">
+      <h2 id="email-change-title" class="acc-title">อีเมลของคุณ</h2>
+      <p class="acc-desc">กรอกอีเมลใหม่ในการแทนอีเมลปัจจุบัน ระบบจะส่งรหัสยืนยัน 6 หลัก ไปยังอีเมลใหม่ของท่าน</p>
+
+      <label class="acc-label" for="ec-email">อีเมลใหม่</label>
+      <div class="acc-input-wrap" [class.acc-input-error]="!!emailError">
+        <span class="material-symbols-outlined acc-input-icon" aria-hidden="true">mail</span>
+        <input #emailInput id="ec-email" type="email" inputmode="email" placeholder="example@example.com"
+          formControlName="email" autocomplete="email" autocapitalize="off" spellcheck="false"
+          [attr.aria-invalid]="!!emailError" aria-describedby="ec-email-error" />
+      </div>
+      <p id="ec-email-error" class="acc-error" [class.visible]="!!emailError" role="alert">{{ emailError || ' ' }}</p>
+
+      <button type="submit" class="acc-submit" [disabled]="loading" [attr.aria-busy]="loading">
+        <span class="acc-spinner" *ngIf="loading" aria-hidden="true"></span>
+        {{ loading ? 'กำลังส่งรหัส...' : 'ส่งรหัสผ่าน' }}
+      </button>
+      <button type="button" class="acc-cancel" (mousedown)="$event.preventDefault()" (click)="onCancel()">ยกเลิก</button>
+    </div>
+  </form>
+
+  <!-- ===== ขั้น 2: กรอกรหัสยืนยัน ===== -->
+  <form *ngSwitchCase="2" class="acc-step" (submit)="$event.preventDefault(); submitCode()" novalidate>
+    <button type="button" class="acc-back" (mousedown)="$event.preventDefault()" (click)="back()">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>ย้อนกลับ
+    </button>
+    <app-stepper class="acc-stepper" [steps]="stepNames" [current]="stepperIndex" label="ขั้นตอนการแก้ไขอีเมล"></app-stepper>
+    <div class="acc-content-narrow">
+      <h2 id="email-change-title" class="acc-title">กรอกรหัสยืนยัน</h2>
+      <p class="acc-desc">
+        เราได้ส่งรหัสยืนยัน 6 หลัก ไปยัง <strong class="acc-email-strong">{{ sentTo }}</strong> กรุณากรอกรหัสภายใน 5 นาที
+      </p>
+
+      <label id="ec-code-label" class="acc-label" for="ec-otp-0">รหัสยืนยัน</label>
+      <app-otp-input idPrefix="ec-otp" labelledBy="ec-code-label" [invalid]="otpInvalid"
+        (changed)="onOtpChanged($event)" (completed)="onOtpCompleted($event)"></app-otp-input>
+      <p class="acc-error" [class.visible]="!!(errorMessage || infoMessage)" [class.acc-info]="!errorMessage && !!infoMessage"
+        role="alert">{{ errorMessage || infoMessage || ' ' }}</p>
+
+      <button type="submit" class="acc-submit" [disabled]="loading" [attr.aria-busy]="loading">
+        <span class="acc-spinner" *ngIf="loading" aria-hidden="true"></span>
+        {{ loading ? 'กำลังตรวจสอบ...' : 'ยืนยันตัวตน' }}
+      </button>
+
+      <p class="acc-resend">
+        ไม่ได้รับรหัส?
+        <button *ngIf="countdown.seconds === 0; else waiting" type="button" class="acc-resend-link"
+          [disabled]="resending" (mousedown)="$event.preventDefault()" (click)="resendCode()">
+          {{ resending ? 'กำลังส่ง...' : 'ส่งรหัสอีกครั้ง' }}
+        </button>
+        <ng-template #waiting><span class="acc-resend-wait" aria-live="polite">{{ countdown.label }}</span></ng-template>
+      </p>
+    </div>
+  </form>
+
+  <!-- ===== ขั้น 3: เสร็จสิ้น (ไม่มีปุ่มย้อนกลับ) ===== -->
+  <div *ngSwitchCase="3" class="acc-step">
+    <app-stepper class="acc-stepper" [steps]="stepNames" [current]="3" label="ขั้นตอนการแก้ไขอีเมล"></app-stepper>
+    <img class="acc-illus acc-illus-done" [src]="illustrations.done" alt="" width="150" height="150" />
+    <h2 id="email-change-title" class="acc-title acc-title-center">เรียบร้อย!!</h2>
+    <p class="acc-desc acc-desc-center" role="status">ทำการเปลี่ยนอีเมลของคุณเรียบร้อยแล้ว</p>
+    <button #doneButton type="button" class="acc-submit acc-submit-narrow" (click)="finish()">เรียบร้อย</button>
+  </div>
+
+</div>
