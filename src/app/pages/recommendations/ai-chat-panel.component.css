@@ -88,7 +88,7 @@
 
 /* ===== แถบกรมท่าท้ายจอ + ช่องพิมพ์ (ล็อกกับจอ) ===== */
 .band {
-  position: fixed; left: 0; right: 0; bottom: var(--kb-offset); z-index: 150;
+  position: fixed; left: 0; right: 0; bottom: calc(var(--kb-offset) + var(--demo-bar-h, 0px)); z-index: 150;
   height: var(--band-h); background: var(--c-navy);
 }
 /* ไล่สีจากพื้นหลังเป็นโปร่งใสเหนือแถบ — ข้อความที่เลื่อนผ่านไม่ตัดกันแข็ง ๆ */
@@ -99,7 +99,7 @@
 
 /* ยึดขอบล่าง -> textarea ขยายขึ้นด้านบน ไม่ล้นจอ */
 .composer-wrap {
-  position: fixed; left: 50%; bottom: calc(var(--composer-bottom) + var(--kb-offset)); z-index: 151;
+  position: fixed; left: 50%; bottom: calc(var(--composer-bottom) + var(--kb-offset) + var(--demo-bar-h, 0px)); z-index: 151;
   width: calc((100% - 2 * var(--page-gutter)) * 0.85); transform: translateX(-50%);
 }
 .composer {

@@ -149,3 +149,10 @@
   .pd-hero-icon { font-size: 32px; }
   .pd-page { padding: var(--page-top) var(--page-gutter) 64px; }
 }
+
+/* ชื่อร้านแบบข้อความ (สินค้าไม่มีลิงก์ร้าน) */
+.pd-source-note {
+  margin: 16px 0 0;
+  color: #5b6170;
+  font-size: 14px;
+}

@@ -59,4 +59,7 @@
        (ทุกที่ที่อยากเปิด modal พวกนี้ เรียกผ่าน AuthModalService เท่านั้น ไม่มีใครสร้าง overlay เองอีก) -->
   <app-auth-modal-host></app-auth-modal-host>
 
+  <!-- แถบโหมดเดโม (มีเฉพาะ build เดโม — build ปกติ demoBanner = null ไม่แสดงอะไร) -->
+  <ng-container *ngComponentOutlet="demoBanner"></ng-container>
+
 </div>

@@ -3,7 +3,8 @@
 .compare-bar {
   position: fixed;
   left: 50%;
-  bottom: 16px;
+  /* --demo-bar-h = ความสูงแถบโหมดเดโม (ไม่มีใน build ปกติ = 0) */
+  bottom: calc(16px + var(--demo-bar-h, 0px));
   transform: translateX(-50%);
   z-index: 1000;
   width: min(1040px, calc(100vw - 32px));
@@ -78,7 +79,7 @@
 
 /* มือถือ: แถบเตี้ยลง การ์ดเลื่อนแนวนอน ปุ่มยังกดง่าย */
 @media (max-width: 767px) {
-  .compare-bar { bottom: 8px; width: calc(100vw - 16px); padding: 10px 12px 12px; border-radius: 14px; }
+  .compare-bar { bottom: calc(8px + var(--demo-bar-h, 0px)); width: calc(100vw - 16px); padding: 10px 12px 12px; border-radius: 14px; }
   .cb-header { flex-wrap: nowrap; }
   .cb-toggle { flex: 0 0 auto; font-size: 15px; }
   /* หัวแถบบรรทัดเดียว: คำว่า "เปรียบเทียบ" เป็นไอคอน (screen reader ยังอ่านคำได้) */

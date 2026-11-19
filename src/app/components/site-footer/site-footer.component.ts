@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SiteConfigService } from '../../services/site-config/site-config.service';
+import { DEMO_FOOTER_NOTE } from '../../demo/demo-mode';
 
 /**
  * footer ทุกหน้า: บอกว่าเป็นโปรเจกต์เพื่อการศึกษา ไม่ขายสินค้า และข้อมูล/รูปเป็นลิขสิทธิ์ของร้านค้าต้นทาง
@@ -16,6 +17,9 @@ import { SiteConfigService } from '../../services/site-config/site-config.servic
         เว็บไซต์นี้เป็นโปรเจกต์เพื่อการศึกษา ให้บริการแนะนำและเปรียบเทียบสินค้าเท่านั้น ไม่มีการขายสินค้า
         หากต้องการซื้อ กรุณาสั่งซื้อผ่านร้านค้าต้นทาง ราคาอาจเปลี่ยนแปลงได้
       </p>
+      @if (demoNote) {
+        <p class="site-footer-demo">{{ demoNote }}</p>
+      } @else {
       <p>
         ข้อมูลสินค้าและรูปภาพเป็นลิขสิทธิ์ของร้านค้าต้นทาง
         หากต้องการให้นำข้อมูลออก กรุณาติดต่อ
@@ -25,6 +29,7 @@ import { SiteConfigService } from '../../services/site-config/site-config.servic
           <span class="site-footer-email missing">ผู้ดูแลเว็บไซต์</span>
         }
       </p>
+      }
       <p class="site-footer-links"><a routerLink="/privacy">นโยบายความเป็นส่วนตัว</a></p>
     </footer>
   `,
@@ -53,4 +58,6 @@ import { SiteConfigService } from '../../services/site-config/site-config.servic
 export class SiteFooterComponent {
   private readonly site = inject(SiteConfigService);
   readonly contactEmail = computed(() => this.site.config().contactEmail);
+  /** build เดโม: แจ้งว่าข้อมูลทั้งหมดแต่งขึ้นเอง แทนข้อความลิขสิทธิ์ร้านค้า (build ปกติ = null) */
+  readonly demoNote = DEMO_FOOTER_NOTE;
 }

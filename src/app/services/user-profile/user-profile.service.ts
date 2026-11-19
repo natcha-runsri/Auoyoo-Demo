@@ -75,7 +75,8 @@ export class UserProfileService {
 
   toAbsoluteUrl(url: string | null | undefined): string | null {
     if (!url) return null;
-    if (/^https?:\/\//i.test(url)) return url;
+    // URL เต็ม หรือรูป preview ในเบราว์เซอร์ (blob:/data:) ใช้ตามเดิม
+    if (/^(https?:\/\/|blob:|data:)/i.test(url)) return url;
     const backendUrl = environment.apiUrl.replace(/\/api\/?$/, '');
     return `${backendUrl}${url.startsWith('/') ? '' : '/'}${url}`;
   }

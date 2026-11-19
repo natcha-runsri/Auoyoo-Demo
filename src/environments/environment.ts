@@ -1,6 +1,8 @@
 // ใช้ตอน build production (ng build) — dev ใช้ environment.development.ts, เทสต์ใช้ environment.test.ts
 export const environment = {
   production: false,
+  /** โหมดเดโม (ข้อมูลจำลองแทน /api) — true เฉพาะ environment.demo.ts */
+  demo: false,
   // relative: เว็บกับ API อยู่โดเมนเดียวกัน — nginx ใน container frontend ส่ง /api และ /uploads ต่อให้ backend
   apiUrl: '/api',
   /**

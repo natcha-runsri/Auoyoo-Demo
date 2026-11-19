@@ -136,6 +136,11 @@ export class ProductDetailComponent implements OnInit {
     return storeLinkLabel(this.product?.source);
   }
 
+  /** ชื่อร้านต้นทาง (ไม่รู้จัก = null) — ใช้ตอนสินค้าไม่มีลิงก์ร้าน */
+  get storeName(): string | null {
+    return storeDisplayName(this.product?.source);
+  }
+
   /** แบรนด์จากร้าน หรือที่ backend หาจากชื่อสินค้า; หาไม่เจอ = "ไม่ระบุแบรนด์" */
   get brandText(): string {
     return brandLabel(this.product?.brand);

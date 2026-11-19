@@ -13,6 +13,7 @@ import { SiteFooterComponent } from './components/site-footer/site-footer.compon
 import { DrawerMenuComponent } from './components/drawer-menu/drawer-menu.component';
 import { FlashMessageComponent } from './components/flash-message/flash-message.component';
 import { SeoService } from './services/seo/seo.service';
+import { DEMO_BANNER } from './demo/demo-mode';
 
 interface Category {
   name: string;
@@ -34,6 +35,9 @@ interface Gadget {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  /** แถบโหมดเดโม — null ใน build ปกติ (ดู demo/demo-mode.ts) */
+  readonly demoBanner = DEMO_BANNER;
+
   title = 'frontend';
 
   readonly favoriteCount$: Observable<number>;

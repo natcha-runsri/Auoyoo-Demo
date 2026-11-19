@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:demo": "ng build --configuration demo --base-href \"/Auoyoo-Demo/\" && node scripts/copy-404.mjs",
+    "start:demo": "ng serve --configuration demo"
   },
   "private": true,
   "dependencies": {

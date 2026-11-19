@@ -57,6 +57,8 @@
         {{ storeLabel }}
         <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
       </a>
+      <!-- ไม่มีลิงก์ร้าน (เช่น ข้อมูลจำลองของเดโม) -> บอกชื่อร้านเป็นข้อความเฉย ๆ ไม่ลิงก์ออกไปไหน -->
+      <p class="pd-source-note" *ngIf="!product.url && storeName">จำหน่ายที่ {{ storeName }}</p>
     </div>
   </div>
 </section>
