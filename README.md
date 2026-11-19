@@ -6,7 +6,10 @@
 
 repo นี้มีเฉพาะส่วน frontend (Angular) ที่ปรับให้ทำงานได้โดยไม่มี backend ข้อมูลทุกอย่างในเดโมเป็นข้อมูลจำลอง
 
-<!-- TODO: ชื่อผู้พัฒนา -->
+| ชื่อ-นามสกุล | ตำแหน่ง/หน้าที่รับผิดชอบ | GitHub |
+|---|---|---|
+| นายทัตพงศ์ ทองยวง | Backend Developer (REST API, ระบบแนะนำ/AI, ฐานข้อมูล, Deploy) | [@Tatphong-To](https://github.com/Tatphong-To) |
+| นางสาวณัชชา รุนศรี | Frontend Developer (Angular, UX/UI): ออกแบบหน้าจอและ responsive, หน้าแรก/หมวดหมู่/รายละเอียด/เปรียบเทียบ/แชท AI/รายการโปรด/ประวัติ/โปรไฟล์, เชื่อมต่อ REST API, ทดสอบ (QA) | [@natcha-runsri](https://github.com/natcha-runsri) |
 
 ## ลองอะไรได้บ้าง
 
